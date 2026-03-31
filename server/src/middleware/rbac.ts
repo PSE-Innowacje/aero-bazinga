@@ -47,6 +47,12 @@ export function requirePermission(section: MenuSection, minLevel: PermissionLeve
         message: "Brak uprawnień do modyfikacji",
       });
     }
+    if (minLevel === PermissionLevel.CRUD && level === PermissionLevel.EDIT_VIEW) {
+      return res.status(403).json({
+        error: "forbidden",
+        message: "Brak uprawnień do tworzenia",
+      });
+    }
     next();
   };
 }
