@@ -62,9 +62,9 @@ All UI text, labels, status names, and error messages are in **Polish**. Source:
 | Body | 14px | 400 (regular) | 1.5 | Form labels, table cells, nav items, helper text |
 | Label | 12px | 600 (semibold) | 1.4 | Field labels above inputs, badge text, status chips, table column headers |
 | Heading | 20px | 600 (semibold) | 1.2 | Page titles, sidebar section group headers, card headings |
-| Display | 28px | 700 (bold) | 1.1 | Login page product name "AERO" only |
+| Display | 28px | 600 (semibold) | 1.1 | Login page product name "AERO" only |
 
-Font weight palette: 400 (regular) and 600 (semibold) cover all roles. 700 (bold) reserved for Display only.
+Font weight palette: 400 (regular) and 600 (semibold) are the only weights in the palette — no third weight is used.
 
 ---
 
@@ -195,7 +195,7 @@ HIDE = section not rendered in DOM. Source: CONTEXT.md D-07.
 
 - Full-viewport, centered layout, bg: `#FFFFFF`
 - Card: max-width 400px, bg: `#F8F9FA`, padding 48px vertical / 32px horizontal, border-radius 8px, box-shadow `0 1px 3px rgba(0,0,0,0.12)`
-- Product name "AERO" at top of card: 28px, weight 700, color `#003E7E`
+- Product name "AERO" at top of card: 28px, weight 600, color `#003E7E`
 - Subtitle below product name: "System zarządzania operacjami lotniczymi", 14px, weight 400, color `#707070`
 - Form fields: Email (type email), Hasło (type password) — both full width, 14px label above each, 8px label-to-input gap
 - Submit button: full width, bg `#003E7E`, text `#FFFFFF`, 16px semibold label "Zaloguj się", 44px height
@@ -213,7 +213,7 @@ HIDE = section not rendered in DOM. Source: CONTEXT.md D-07.
 ### 404 Page (`/404` or catch-all)
 
 - Application shell if authenticated; standalone centered if unauthenticated
-- Error code "404" displayed: 28px, weight 700, color `#D20A11`
+- Error code "404" displayed: 28px, weight 600, color `#D20A11`
 - Heading: "Strona nie istnieje", 20px, semibold, `#212529`
 - Body: "Żądana strona nie została znaleziona.", 14px, `#707070`
 - Link/button: "Wróć do strony głównej" — plain text link, `#003E7E`
