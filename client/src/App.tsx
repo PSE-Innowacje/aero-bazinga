@@ -9,6 +9,8 @@ import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { HelicoptersPage } from "@/pages/admin/HelicoptersPage";
 import { HelicopterFormPage } from "@/pages/admin/HelicopterFormPage";
+import { CrewPage } from "@/pages/admin/CrewPage";
+import { CrewMemberFormPage } from "@/pages/admin/CrewMemberFormPage";
 
 // Placeholder page for sections not yet implemented
 function PlaceholderPage({ title }: { title: string }) {
@@ -64,6 +66,9 @@ export default function App() {
                     <Route path="helicopters" element={<HelicoptersPage />} />
                     <Route path="helicopters/new" element={<HelicopterFormPage />} />
                     <Route path="helicopters/:id/edit" element={<HelicopterFormPage />} />
+                    <Route path="crew" element={<CrewPage />} />
+                    <Route path="crew/new" element={<CrewMemberFormPage />} />
+                    <Route path="crew/:id/edit" element={<CrewMemberFormPage />} />
                     <Route path="*" element={<PlaceholderPage title="Administracja" />} />
                   </Routes>
                 </AppShell>
