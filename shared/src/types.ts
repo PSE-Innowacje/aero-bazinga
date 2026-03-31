@@ -207,3 +207,76 @@ export interface UpdateOperationRequest {
   contact_emails?: string[];
   // kml file optionally sent as multipart
 }
+
+// Flight order types (FLT-01 through FLT-11)
+export interface FlightOrder {
+  id: number;
+  order_number: string; // formatted as YYYY-NNNN
+  planned_start_datetime: string;
+  planned_end_datetime: string;
+  actual_start_datetime: string | null;
+  actual_end_datetime: string | null;
+  pilot_user_id: number;
+  pilot_name: string;
+  pilot_email: string;
+  helicopter_id: number;
+  helicopter_registration: string;
+  helicopter_type: string;
+  start_airfield_id: number;
+  start_airfield_name: string;
+  end_airfield_id: number;
+  end_airfield_name: string;
+  crew_total_weight_kg: number | null;
+  estimated_route_length_km: number | null;
+  status: number;
+  created_at: string;
+  updated_at: string;
+  // joined arrays
+  crew_members: FlightOrderCrewMember[];
+  operations: FlightOrderOperation[];
+}
+
+export interface FlightOrderCrewMember {
+  crew_member_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  weight_kg: number;
+  role: string;
+  training_expiry_date: string;
+}
+
+export interface FlightOrderOperation {
+  operation_id: number;
+  operation_number: string;
+  short_description: string;
+  route_distance_km: number | null;
+  status: number;
+}
+
+export interface CreateFlightOrderRequest {
+  planned_start_datetime: string;
+  planned_end_datetime: string;
+  helicopter_id: number;
+  start_airfield_id: number;
+  end_airfield_id: number;
+  crew_member_ids: number[];
+  operation_ids: number[];
+}
+
+export interface UpdateFlightOrderRequest {
+  planned_start_datetime?: string;
+  planned_end_datetime?: string;
+  helicopter_id?: number;
+  start_airfield_id?: number;
+  end_airfield_id?: number;
+  crew_member_ids?: number[];
+  operation_ids?: number[];
+  actual_start_datetime?: string | null;
+  actual_end_datetime?: string | null;
+}
+
+export interface FlightOrderValidationWarning {
+  rule: string;
+  message: string;
+}

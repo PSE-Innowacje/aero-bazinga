@@ -10,6 +10,7 @@ import { crewRouter } from "./routes/crew.js";
 import { airfieldsRouter } from "./routes/airfields.js";
 import { usersRouter } from "./routes/users.js";
 import { operationsRouter } from "./routes/operations.js";
+import { flightOrdersRouter } from "./routes/flight-orders.js";
 import { PermissionLevel } from "shared/permissions";
 
 const app = express();
@@ -59,6 +60,9 @@ app.use(
   requireAuth,
   requirePermission("zlecenia_na_lot", PermissionLevel.READ)
 );
+
+// Flight orders router (Phase 4)
+app.use("/api/flight-orders", flightOrdersRouter);
 
 app.listen(PORT, () => {
   console.log(`AERO server running on port ${PORT}`);
