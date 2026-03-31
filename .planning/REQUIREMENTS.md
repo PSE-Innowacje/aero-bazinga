@@ -97,55 +97,53 @@
 
 ## Traceability
 
-*(Populated during roadmap creation)*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| HELI-01 | — | Pending |
-| HELI-02 | — | Pending |
-| HELI-03 | — | Pending |
-| CREW-01 | — | Pending |
-| CREW-02 | — | Pending |
-| CREW-03 | — | Pending |
-| CREW-04 | — | Pending |
-| LAND-01 | — | Pending |
-| LAND-02 | — | Pending |
-| LAND-03 | — | Pending |
-| USR-01 | — | Pending |
-| USR-02 | — | Pending |
-| USR-03 | — | Pending |
-| OPS-01 | — | Pending |
-| OPS-02 | — | Pending |
-| OPS-03 | — | Pending |
-| OPS-04 | — | Pending |
-| OPS-05 | — | Pending |
-| OPS-06 | — | Pending |
-| OPS-07 | — | Pending |
-| OPS-08 | — | Pending |
-| OPS-09 | — | Pending |
-| OPS-10 | — | Pending |
-| OPS-11 | — | Pending |
-| OPS-12 | — | Pending |
-| FLT-01 | — | Pending |
-| FLT-02 | — | Pending |
-| FLT-03 | — | Pending |
-| FLT-04 | — | Pending |
-| FLT-05 | — | Pending |
-| FLT-06 | — | Pending |
-| FLT-07 | — | Pending |
-| FLT-08 | — | Pending |
-| FLT-09 | — | Pending |
-| FLT-10 | — | Pending |
-| FLT-11 | — | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| HELI-01 | Phase 2 | Pending |
+| HELI-02 | Phase 2 | Pending |
+| HELI-03 | Phase 2 | Pending |
+| CREW-01 | Phase 2 | Pending |
+| CREW-02 | Phase 2 | Pending |
+| CREW-03 | Phase 2 | Pending |
+| CREW-04 | Phase 2 | Pending |
+| LAND-01 | Phase 2 | Pending |
+| LAND-02 | Phase 2 | Pending |
+| LAND-03 | Phase 2 | Pending |
+| USR-01 | Phase 2 | Pending |
+| USR-02 | Phase 2 | Pending |
+| USR-03 | Phase 2 | Pending |
+| OPS-01 | Phase 3 | Pending |
+| OPS-02 | Phase 3 | Pending |
+| OPS-03 | Phase 3 | Pending |
+| OPS-04 | Phase 3 | Pending |
+| OPS-05 | Phase 3 | Pending |
+| OPS-06 | Phase 3 | Pending |
+| OPS-07 | Phase 3 | Pending |
+| OPS-08 | Phase 3 | Pending |
+| OPS-09 | Phase 3 | Pending |
+| OPS-10 | Phase 3 | Pending |
+| OPS-11 | Phase 3 | Pending |
+| OPS-12 | Phase 3 | Pending |
+| FLT-01 | Phase 4 | Pending |
+| FLT-02 | Phase 4 | Pending |
+| FLT-03 | Phase 4 | Pending |
+| FLT-04 | Phase 4 | Pending |
+| FLT-05 | Phase 4 | Pending |
+| FLT-06 | Phase 4 | Pending |
+| FLT-07 | Phase 4 | Pending |
+| FLT-08 | Phase 4 | Pending |
+| FLT-09 | Phase 4 | Pending |
+| FLT-10 | Phase 4 | Pending |
+| FLT-11 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 39 total
-- Mapped to phases: 0
-- Unmapped: 39 ⚠️ (populated by roadmapper)
+- Mapped to phases: 39
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 after roadmap creation — traceability fully populated*
