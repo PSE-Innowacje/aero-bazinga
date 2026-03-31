@@ -271,6 +271,49 @@ flightOrdersRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
+// ─── GET /api/flight-orders/airfields — list airfields for flight order forms ─
+flightOrdersRouter.get("/airfields/list", async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, name, latitude, longitude FROM airfields ORDER BY name ASC`
+    );
+    return res.status(200).json({ airfields: result.rows });
+  } catch (error) {
+    console.error("Get airfields for flight orders error:", error);
+    return res.status(500).json({ error: "server_error", message: "Blad serwera." });
+  }
+});
+
+// ─── GET /api/flight-orders/helicopters — active helicopters for selection ───
+flightOrdersRouter.get("/helicopters/list", async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, registration_number, type, max_crew_count, max_crew_payload_kg,
+              range_km, inspection_expiry_date
+       FROM helicopters WHERE status = 1
+       ORDER BY registration_number ASC`
+    );
+    return res.status(200).json({ helicopters: result.rows });
+  } catch (error) {
+    console.error("Get helicopters for flight orders error:", error);
+    return res.status(500).json({ error: "server_error", message: "Blad serwera." });
+  }
+});
+
+// ─── GET /api/flight-orders/crew — crew members for selection ────────────────
+flightOrdersRouter.get("/crew/list", async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, first_name, last_name, email, weight_kg, role, training_expiry_date
+       FROM crew_members ORDER BY last_name, first_name ASC`
+    );
+    return res.status(200).json({ crew: result.rows });
+  } catch (error) {
+    console.error("Get crew for flight orders error:", error);
+    return res.status(500).json({ error: "server_error", message: "Blad serwera." });
+  }
+});
+
 // ─── GET /api/flight-orders/:id ─────────────────────────────────────────────
 flightOrdersRouter.get("/:id", async (req: Request, res: Response) => {
   const id = parseInt(req.params["id"] as string, 10);

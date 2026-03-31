@@ -18,6 +18,9 @@ import { UserFormPage } from "@/pages/admin/UserFormPage";
 import { OperationsListPage } from "@/pages/operations/OperationsListPage";
 import { OperationFormPage } from "@/pages/operations/OperationFormPage";
 import { OperationDetailPage } from "@/pages/operations/OperationDetailPage";
+import { FlightOrdersListPage } from "@/pages/flight-orders/FlightOrdersListPage";
+import { FlightOrderFormPage } from "@/pages/flight-orders/FlightOrderFormPage";
+import { FlightOrderDetailPage } from "@/pages/flight-orders/FlightOrderDetailPage";
 
 // Placeholder page for sections not yet implemented
 function PlaceholderPage({ title }: { title: string }) {
@@ -96,7 +99,7 @@ export default function App() {
               <ProtectedRoute section="planowanie_operacji">
                 <AppShell>
                   <Routes>
-                    <Route path="" element={<OperationsListPage />} />
+                    <Route index element={<OperationsListPage />} />
                     <Route path="new" element={<OperationFormPage />} />
                     <Route path=":id" element={<OperationDetailPage />} />
                     <Route path=":id/edit" element={<OperationFormPage />} />
@@ -112,7 +115,12 @@ export default function App() {
             element={
               <ProtectedRoute section="zlecenia_na_lot">
                 <AppShell>
-                  <PlaceholderPage title="Zlecenia na lot" />
+                  <Routes>
+                    <Route index element={<FlightOrdersListPage />} />
+                    <Route path="new" element={<FlightOrderFormPage />} />
+                    <Route path=":id" element={<FlightOrderDetailPage />} />
+                    <Route path=":id/edit" element={<FlightOrderFormPage />} />
+                  </Routes>
                 </AppShell>
               </ProtectedRoute>
             }
