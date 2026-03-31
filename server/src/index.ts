@@ -9,6 +9,7 @@ import { helicoptersRouter } from "./routes/helicopters.js";
 import { crewRouter } from "./routes/crew.js";
 import { airfieldsRouter } from "./routes/airfields.js";
 import { usersRouter } from "./routes/users.js";
+import { operationsRouter } from "./routes/operations.js";
 import { PermissionLevel } from "shared/permissions";
 
 const app = express();
@@ -50,6 +51,9 @@ app.use(
   requireAuth,
   requirePermission("planowanie_operacji", PermissionLevel.READ)
 );
+
+// Operations router (Phase 3)
+app.use("/api/operations", operationsRouter);
 app.use(
   "/api/flight-orders",
   requireAuth,

@@ -114,3 +114,96 @@ export interface CreateSystemUserRequest {
   role: string;
   crew_member_id?: number | null;
 }
+
+// Operation types dictionary entry (DB row)
+export interface OperationTypeRow {
+  id: number;
+  name: string;
+}
+
+// Planned operation contact person
+export interface OperationContactPerson {
+  id: number;
+  operation_id: number;
+  email: string;
+}
+
+// Planned operation comment
+export interface OperationComment {
+  id: number;
+  operation_id: number;
+  user_id: number;
+  author_email: string;
+  author_name: string;
+  comment_text: string;
+  created_at: string;
+}
+
+// Operation history entry
+export interface OperationHistory {
+  id: number;
+  operation_id: number;
+  user_id: number;
+  user_email: string;
+  user_name: string;
+  field_name: string;
+  old_value: string | null;
+  new_value: string | null;
+  changed_at: string;
+}
+
+// KML route point
+export interface KmlPoint {
+  lat: number;
+  lng: number;
+}
+
+// Planned operation (full row with joined data)
+export interface PlannedOperation {
+  id: number;
+  operation_number: string; // formatted as YYYY-NNNN
+  project_reference: string;
+  short_description: string;
+  kml_file_path: string;
+  kml_points_json: KmlPoint[] | null;
+  route_distance_km: number | null;
+  proposed_earliest_date: string | null;
+  proposed_latest_date: string | null;
+  planned_earliest_date: string | null;
+  planned_latest_date: string | null;
+  additional_info: string | null;
+  post_completion_notes: string | null;
+  status: number;
+  created_by_user_id: number;
+  created_by_email: string;
+  created_at: string;
+  updated_at: string;
+  // joined arrays
+  operation_types: string[];
+  contact_persons: string[];
+}
+
+export interface CreateOperationRequest {
+  project_reference: string;
+  short_description: string;
+  operation_type_ids: number[];
+  proposed_earliest_date?: string | null;
+  proposed_latest_date?: string | null;
+  additional_info?: string | null;
+  contact_emails?: string[];
+  // kml file sent as multipart
+}
+
+export interface UpdateOperationRequest {
+  project_reference?: string;
+  short_description?: string;
+  operation_type_ids?: number[];
+  proposed_earliest_date?: string | null;
+  proposed_latest_date?: string | null;
+  planned_earliest_date?: string | null;
+  planned_latest_date?: string | null;
+  additional_info?: string | null;
+  post_completion_notes?: string | null;
+  contact_emails?: string[];
+  // kml file optionally sent as multipart
+}
