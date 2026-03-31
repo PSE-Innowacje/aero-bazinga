@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Helicopter,
+  Plane,
   Users,
   MapPin,
   UserCog,
@@ -38,7 +38,7 @@ const NAV_SECTIONS: NavSection[] = [
     key: "administracja",
     label: "ADMINISTRACJA",
     items: [
-      { label: "Helikoptery", path: "/admin/helicopters", icon: Helicopter },
+      { label: "Helikoptery", path: "/admin/helicopters", icon: Plane },
       { label: "Członkowie załogi", path: "/admin/crew", icon: Users },
       { label: "Lądowiska planowe", path: "/admin/airfields", icon: MapPin },
       { label: "Użytkownicy", path: "/admin/users", icon: UserCog },

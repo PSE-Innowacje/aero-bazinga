@@ -1,0 +1,15 @@
+{
+  "name": "shared",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./roles": "./src/roles.ts",
+    "./statuses": "./src/statuses.ts",
+    "./permissions": "./src/permissions.ts",
+    "./types": "./src/types.ts",
+    "./crew-roles": "./src/crew-roles.ts",
+    "./operation-types": "./src/operation-types.ts"
+  }
+}
