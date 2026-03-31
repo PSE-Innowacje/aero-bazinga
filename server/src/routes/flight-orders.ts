@@ -387,23 +387,31 @@ flightOrdersRouter.post(
     const startAirfieldId = parseInt(String(start_airfield_id), 10);
     const endAirfieldId = parseInt(String(end_airfield_id), 10);
 
-    // Parse arrays
+    // Parse arrays (safe JSON.parse)
     let crewIds: number[] = [];
     if (crew_member_ids) {
-      crewIds = Array.isArray(crew_member_ids)
-        ? crew_member_ids.map(Number)
-        : typeof crew_member_ids === "string"
-          ? JSON.parse(crew_member_ids).map(Number)
-          : [];
+      try {
+        crewIds = Array.isArray(crew_member_ids)
+          ? crew_member_ids.map(Number)
+          : typeof crew_member_ids === "string"
+            ? JSON.parse(crew_member_ids).map(Number)
+            : [];
+      } catch {
+        return res.status(400).json({ error: "bad_request", message: "Nieprawidłowy format listy członków załogi." });
+      }
     }
 
     let opIds: number[] = [];
     if (operation_ids) {
-      opIds = Array.isArray(operation_ids)
-        ? operation_ids.map(Number)
-        : typeof operation_ids === "string"
-          ? JSON.parse(operation_ids).map(Number)
-          : [];
+      try {
+        opIds = Array.isArray(operation_ids)
+          ? operation_ids.map(Number)
+          : typeof operation_ids === "string"
+            ? JSON.parse(operation_ids).map(Number)
+            : [];
+      } catch {
+        return res.status(400).json({ error: "bad_request", message: "Nieprawidłowy format listy operacji." });
+      }
     }
 
     // Verify helicopter is active
@@ -653,24 +661,32 @@ flightOrdersRouter.put(
         addField("actual_end_datetime", body.actual_end_datetime || null);
       }
 
-      // Parse crew member IDs
+      // Parse crew member IDs (safe JSON.parse)
       let newCrewIds: number[] | null = null;
       if (body.crew_member_ids !== undefined) {
-        newCrewIds = Array.isArray(body.crew_member_ids)
-          ? body.crew_member_ids.map(Number)
-          : typeof body.crew_member_ids === "string"
-            ? JSON.parse(body.crew_member_ids).map(Number)
-            : [];
+        try {
+          newCrewIds = Array.isArray(body.crew_member_ids)
+            ? body.crew_member_ids.map(Number)
+            : typeof body.crew_member_ids === "string"
+              ? JSON.parse(body.crew_member_ids).map(Number)
+              : [];
+        } catch {
+          return res.status(400).json({ error: "bad_request", message: "Nieprawidłowy format listy członków załogi." });
+        }
       }
 
-      // Parse operation IDs
+      // Parse operation IDs (safe JSON.parse)
       let newOpIds: number[] | null = null;
       if (body.operation_ids !== undefined) {
-        newOpIds = Array.isArray(body.operation_ids)
-          ? body.operation_ids.map(Number)
-          : typeof body.operation_ids === "string"
-            ? JSON.parse(body.operation_ids).map(Number)
-            : [];
+        try {
+          newOpIds = Array.isArray(body.operation_ids)
+            ? body.operation_ids.map(Number)
+            : typeof body.operation_ids === "string"
+              ? JSON.parse(body.operation_ids).map(Number)
+              : [];
+        } catch {
+          return res.status(400).json({ error: "bad_request", message: "Nieprawidłowy format listy operacji." });
+        }
 
         // Verify new operations are status 3 or already linked (status 4)
         if (newOpIds && newOpIds.length > 0) {
@@ -973,25 +989,29 @@ flightOrdersRouter.post(
           const oldStatus = op.status;
           const newOpsStatus = rule.cascadeOpsTo;
 
-          await client.query(
-            `UPDATE planned_operations SET status = $1, updated_at = NOW() WHERE id = $2`,
+          // Only cascade if operation is still at status 4 (Zaplanowane do zlecenia)
+          // Prevents corrupting operations that have already progressed via another order
+          const cascadeResult = await client.query(
+            `UPDATE planned_operations SET status = $1, updated_at = NOW() WHERE id = $2 AND status = 4`,
             [newOpsStatus, op.operation_id]
           );
 
-          // Record history on the operation
-          const oldLabel: Record<number, string> = {
-            1: "Wprowadzone", 2: "Odrzucone", 3: "Potwierdzone do planu",
-            4: "Zaplanowane do zlecenia", 5: "Czesciowo zrealizowane",
-            6: "Zrealizowane", 7: "Rezygnacja",
-          };
-          const newLabel = oldLabel[newOpsStatus] ?? String(newOpsStatus);
-          const prevLabel = oldLabel[oldStatus] ?? String(oldStatus);
+          // Record history only if the UPDATE actually changed a row
+          if (cascadeResult.rowCount && cascadeResult.rowCount > 0) {
+            const oldLabel: Record<number, string> = {
+              1: "Wprowadzone", 2: "Odrzucone", 3: "Potwierdzone do planu",
+              4: "Zaplanowane do zlecenia", 5: "Czesciowo zrealizowane",
+              6: "Zrealizowane", 7: "Rezygnacja",
+            };
+            const newLabel = oldLabel[newOpsStatus] ?? String(newOpsStatus);
+            const prevLabel = oldLabel[oldStatus] ?? String(oldStatus);
 
-          await client.query(
-            `INSERT INTO operation_history (operation_id, user_id, field_name, old_value, new_value)
-             VALUES ($1, $2, 'status', $3, $4)`,
-            [op.operation_id, userId, prevLabel, newLabel]
-          );
+            await client.query(
+              `INSERT INTO operation_history (operation_id, user_id, field_name, old_value, new_value)
+               VALUES ($1, $2, 'status', $3, $4)`,
+              [op.operation_id, userId, prevLabel, newLabel]
+            );
+          }
         }
       }
 

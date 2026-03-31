@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import { pool } from "../db/pool.js";
-import { requireAuth } from "../middleware/rbac.js";
 import { UserRole } from "shared/roles";
 
 export const dashboardRouter = Router();
 
-dashboardRouter.get("/", requireAuth, async (req: Request, res: Response) => {
+// requireAuth is applied at mount level in index.ts
+dashboardRouter.get("/", async (req: Request, res: Response) => {
   const role = req.session.role as string;
   const userId = req.session.userId!;
 
@@ -129,28 +129,29 @@ dashboardRouter.get("/", requireAuth, async (req: Request, res: Response) => {
       const now = new Date().toISOString().split("T")[0];
       const in30 = new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0];
 
+      // Show already-expired AND expiring within 30 days
       const [expiringHeli, expiringLicense, expiringTraining] =
         await Promise.all([
           pool.query(
             `SELECT id, registration_number, inspection_expiry_date
              FROM helicopters
-             WHERE status = 1 AND inspection_expiry_date BETWEEN $1 AND $2
+             WHERE status = 1 AND inspection_expiry_date <= $1
              ORDER BY inspection_expiry_date ASC`,
-            [now, in30]
+            [in30]
           ),
           pool.query(
             `SELECT id, first_name, last_name, license_expiry_date
              FROM crew_members
-             WHERE role = 'Pilot' AND license_expiry_date BETWEEN $1 AND $2
+             WHERE role = 'Pilot' AND license_expiry_date <= $1
              ORDER BY license_expiry_date ASC`,
-            [now, in30]
+            [in30]
           ),
           pool.query(
             `SELECT id, first_name, last_name, training_expiry_date
              FROM crew_members
-             WHERE training_expiry_date BETWEEN $1 AND $2
+             WHERE training_expiry_date <= $1
              ORDER BY training_expiry_date ASC`,
-            [now, in30]
+            [in30]
           ),
         ]);
 
