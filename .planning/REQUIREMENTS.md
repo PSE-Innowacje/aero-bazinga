@@ -14,28 +14,28 @@
 
 ### Helicopters
 
-- [ ] **HELI-01**: Admin can create a helicopter record with: registration number (max 30), type (max 100), description (max 100, optional), max crew count (1–10), max crew payload kg (1–1000), status (active/inactive), inspection expiry date (required when active), range km (1–1000)
-- [ ] **HELI-02**: Admin can edit an existing helicopter record
-- [ ] **HELI-03**: Helicopter list shows registration number, type, status; default sort by status then registration number
+- [x] **HELI-01**: Admin can create a helicopter record with: registration number (max 30), type (max 100), description (max 100, optional), max crew count (1–10), max crew payload kg (1–1000), status (active/inactive), inspection expiry date (required when active), range km (1–1000)
+- [x] **HELI-02**: Admin can edit an existing helicopter record
+- [x] **HELI-03**: Helicopter list shows registration number, type, status; default sort by status then registration number
 
 ### Crew Members
 
-- [ ] **CREW-01**: Admin can create a crew member record with: first name (max 100), last name (max 100), email/login (max 100, validated), weight kg (30–200), role (from dictionary), pilot license number (max 30, required for Pilot role), license expiry date (required for Pilot role), training expiry date (required)
-- [ ] **CREW-02**: Admin can edit an existing crew member record
-- [ ] **CREW-03**: Email is validated: letters + `.-@` only, exactly one `@`, at least two dot-separated segments after `@`
-- [ ] **CREW-04**: Crew list shows email, role, license expiry, training expiry; default sort by email
+- [x] **CREW-01**: Admin can create a crew member record with: first name (max 100), last name (max 100), email/login (max 100, validated), weight kg (30–200), role (from dictionary), pilot license number (max 30, required for Pilot role), license expiry date (required for Pilot role), training expiry date (required)
+- [x] **CREW-02**: Admin can edit an existing crew member record
+- [x] **CREW-03**: Email is validated: letters + `.-@` only, exactly one `@`, at least two dot-separated segments after `@`
+- [x] **CREW-04**: Crew list shows email, role, license expiry, training expiry; default sort by email
 
 ### Airfields
 
-- [ ] **LAND-01**: Admin can create an airfield record with name and coordinates
-- [ ] **LAND-02**: Admin can edit an existing airfield record
-- [ ] **LAND-03**: Airfield list shows name; default sort by name
+- [x] **LAND-01**: Admin can create an airfield record with name and coordinates
+- [x] **LAND-02**: Admin can edit an existing airfield record
+- [x] **LAND-03**: Airfield list shows name; default sort by name
 
 ### System Users
 
-- [ ] **USR-01**: Admin can create a system user with: first name (max 100), last name (max 100), email/login (max 100, validated), role (from dictionary: Administrator, Osoba planująca, Osoba nadzorująca, Pilot)
-- [ ] **USR-02**: Admin can edit an existing system user record
-- [ ] **USR-03**: User list shows email, role; default sort by email
+- [x] **USR-01**: Admin can create a system user with: first name (max 100), last name (max 100), email/login (max 100, validated), role (from dictionary: Administrator, Osoba planująca, Osoba nadzorująca, Pilot)
+- [x] **USR-02**: Admin can edit an existing system user record
+- [x] **USR-03**: User list shows email, role; default sort by email
 
 ### Planned Operations
 
@@ -106,19 +106,19 @@
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
-| HELI-01 | Phase 2 | Pending |
-| HELI-02 | Phase 2 | Pending |
-| HELI-03 | Phase 2 | Pending |
-| CREW-01 | Phase 2 | Pending |
-| CREW-02 | Phase 2 | Pending |
-| CREW-03 | Phase 2 | Pending |
-| CREW-04 | Phase 2 | Pending |
-| LAND-01 | Phase 2 | Pending |
-| LAND-02 | Phase 2 | Pending |
-| LAND-03 | Phase 2 | Pending |
-| USR-01 | Phase 2 | Pending |
-| USR-02 | Phase 2 | Pending |
-| USR-03 | Phase 2 | Pending |
+| HELI-01 | Phase 2 | Complete |
+| HELI-02 | Phase 2 | Complete |
+| HELI-03 | Phase 2 | Complete |
+| CREW-01 | Phase 2 | Complete |
+| CREW-02 | Phase 2 | Complete |
+| CREW-03 | Phase 2 | Complete |
+| CREW-04 | Phase 2 | Complete |
+| LAND-01 | Phase 2 | Complete |
+| LAND-02 | Phase 2 | Complete |
+| LAND-03 | Phase 2 | Complete |
+| USR-01 | Phase 2 | Complete |
+| USR-02 | Phase 2 | Complete |
+| USR-03 | Phase 2 | Complete |
 | OPS-01 | Phase 3 | Pending |
 | OPS-02 | Phase 3 | Pending |
 | OPS-03 | Phase 3 | Pending |

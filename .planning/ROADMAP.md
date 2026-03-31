@@ -13,7 +13,7 @@ AERO is built in four phases that follow the natural dependency chain of the app
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
-- [ ] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
+- [x] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
 - [ ] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history
 - [ ] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade
 
@@ -49,9 +49,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: Helicopters CRUD — API endpoints + React list and form (all fields, validation, default sort)
-- [ ] 02-02: Crew members CRUD — API endpoints + React list and form (email validation, pilot-conditional fields, default sort)
-- [ ] 02-03: Airfields + System users CRUD — API endpoints + React lists and forms for both simpler entities
+- [x] 02-01: Helicopters CRUD — API endpoints + React list and form (all fields, validation, default sort)
+- [x] 02-02: Crew members CRUD — API endpoints + React list and form (email validation, pilot-conditional fields, default sort)
+- [x] 02-03: Airfields + System users CRUD — API endpoints + React lists and forms for both simpler entities
 **UI hint**: yes
 
 ### Phase 3: Planned Operations
@@ -100,6 +100,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-31 |
-| 2. Admin Panel | 0/3 | Not started | - |
+| 2. Admin Panel | 3/3 | Complete | 2026-03-31 |
 | 3. Planned Operations | 0/3 | Not started | - |
 | 4. Flight Orders | 0/3 | Not started | - |
