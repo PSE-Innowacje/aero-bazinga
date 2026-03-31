@@ -56,17 +56,17 @@
 
 ### Flight Orders
 
-- [ ] **FLT-01**: Only Pilot can create a flight order (Osoba nadzorująca has edit/view only on Zlecenia); Pilot creates a flight order with: auto-assigned order number, planned start datetime, planned end datetime, pilot (auto-filled from the crew member record linked to the current logged-in Pilot user), helicopter (active only), crew members (multi-select, optional), start airfield, end airfield, selected planned operations (multi-select, status 3 only, sorted by planned earliest date)
-- [ ] **FLT-02**: Crew total weight is auto-calculated: sum of pilot weight + all selected crew member weights
-- [ ] **FLT-03**: Estimated route length is auto-calculated: sum of km from all selected operations
-- [ ] **FLT-04**: Map displays: start airfield marker, all KML route points from selected operations, end airfield marker
-- [ ] **FLT-05**: Save is blocked (with specific warning) if any of: helicopter inspection expired on flight date; pilot license expired on flight date; any crew member training expired on flight date; crew total weight exceeds helicopter max payload; estimated route length exceeds helicopter range
-- [ ] **FLT-06**: Pilot can submit flight order for supervisor approval (1→2)
-- [ ] **FLT-07**: Supervisor sees Accept (2→4) and Reject (2→3) action buttons when flight order status = 2
-- [ ] **FLT-08**: Pilot sees completion reporting buttons when status = 4: "Zrealizowane w części" (4→5, all linked ops→5), "Zrealizowane w całości" (4→6, all linked ops→6), "Nie zrealizowane" (4→7, all linked ops→3)
-- [ ] **FLT-09**: Real start and end datetime are required before a flight order can reach status 5 or 6
-- [ ] **FLT-10**: Flight order list shows: order number, planned start datetime, helicopter, pilot, status; filterable (default filter: status 2); sorted by planned start datetime ascending
-- [ ] **FLT-11**: When operations are added to a flight order, their status automatically changes from 3 to 4; this change and all cascade status changes execute in a single atomic DB transaction
+- [x] **FLT-01**: Only Pilot can create a flight order (Osoba nadzorująca has edit/view only on Zlecenia); Pilot creates a flight order with: auto-assigned order number, planned start datetime, planned end datetime, pilot (auto-filled from the crew member record linked to the current logged-in Pilot user), helicopter (active only), crew members (multi-select, optional), start airfield, end airfield, selected planned operations (multi-select, status 3 only, sorted by planned earliest date)
+- [x] **FLT-02**: Crew total weight is auto-calculated: sum of pilot weight + all selected crew member weights
+- [x] **FLT-03**: Estimated route length is auto-calculated: sum of km from all selected operations
+- [x] **FLT-04**: Map displays: start airfield marker, all KML route points from selected operations, end airfield marker
+- [x] **FLT-05**: Save is blocked (with specific warning) if any of: helicopter inspection expired on flight date; pilot license expired on flight date; any crew member training expired on flight date; crew total weight exceeds helicopter max payload; estimated route length exceeds helicopter range
+- [x] **FLT-06**: Pilot can submit flight order for supervisor approval (1→2)
+- [x] **FLT-07**: Supervisor sees Accept (2→4) and Reject (2→3) action buttons when flight order status = 2
+- [x] **FLT-08**: Pilot sees completion reporting buttons when status = 4: "Zrealizowane w części" (4→5, all linked ops→5), "Zrealizowane w całości" (4→6, all linked ops→6), "Nie zrealizowane" (4→7, all linked ops→3)
+- [x] **FLT-09**: Real start and end datetime are required before a flight order can reach status 5 or 6
+- [x] **FLT-10**: Flight order list shows: order number, planned start datetime, helicopter, pilot, status; filterable (default filter: status 2); sorted by planned start datetime ascending
+- [x] **FLT-11**: When operations are added to a flight order, their status automatically changes from 3 to 4; this change and all cascade status changes execute in a single atomic DB transaction
 
 ## v2 Requirements
 
@@ -133,17 +133,17 @@
 | OPS-10 | Phase 3 | Complete |
 | OPS-11 | Phase 3 | Complete |
 | OPS-12 | Phase 3 | Complete |
-| FLT-01 | Phase 4 | Pending |
-| FLT-02 | Phase 4 | Pending |
-| FLT-03 | Phase 4 | Pending |
-| FLT-04 | Phase 4 | Pending |
-| FLT-05 | Phase 4 | Pending |
-| FLT-06 | Phase 4 | Pending |
-| FLT-07 | Phase 4 | Pending |
-| FLT-08 | Phase 4 | Pending |
-| FLT-09 | Phase 4 | Pending |
-| FLT-10 | Phase 4 | Pending |
-| FLT-11 | Phase 4 | Pending |
+| FLT-01 | Phase 4 | Complete |
+| FLT-02 | Phase 4 | Complete |
+| FLT-03 | Phase 4 | Complete |
+| FLT-04 | Phase 4 | Complete |
+| FLT-05 | Phase 4 | Complete |
+| FLT-06 | Phase 4 | Complete |
+| FLT-07 | Phase 4 | Complete |
+| FLT-08 | Phase 4 | Complete |
+| FLT-09 | Phase 4 | Complete |
+| FLT-10 | Phase 4 | Complete |
+| FLT-11 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 43 total (4 added from implementation checklist review)

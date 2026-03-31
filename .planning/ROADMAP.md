@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
 - [x] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
 - [x] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history (completed 2026-03-31)
-- [ ] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade
+- [x] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade (completed 2026-03-31)
 
 ## Phase Details
 
@@ -87,9 +87,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3->4 transition on link
-- [ ] 04-02: Flight orders workflow — submit (1->2), supervisor accept/reject (2->4 or 2->3), completion reporting (4->5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
-- [ ] 04-03: Flight orders UI — order form with map display (start + operation routes + end), list view with filtering/sorting, status action buttons per role
+- [x] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3->4 transition on link
+- [x] 04-02: Flight orders workflow — submit (1->2), supervisor accept/reject (2->4 or 2->3), completion reporting (4->5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
+- [x] 04-03: Flight orders UI — order form with map display (start + operation routes + end), list view with filtering/sorting, status action buttons per role
 **UI hint**: yes
 
 ## Progress
@@ -102,4 +102,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Foundation | 3/3 | Complete | 2026-03-31 |
 | 2. Admin Panel | 3/3 | Complete | 2026-03-31 |
 | 3. Planned Operations | 3/3 | Complete   | 2026-03-31 |
-| 4. Flight Orders | 0/3 | Not started | - |
+| 4. Flight Orders | 3/3 | Complete | 2026-03-31 |
