@@ -7,9 +7,9 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can log in with email and password
-- [ ] **AUTH-02**: User session persists across browser refresh (stays logged in)
-- [ ] **AUTH-03**: Access to menu sections and data is restricted by role per permissions matrix — enforced on both frontend (hidden sections) and backend (middleware per endpoint); `NONE` = hidden + 403, `READ` = GET only, `CRUD` = full access; Osoba nadzorująca on Zlecenia na lot = edit + view only (no create)
+- [x] **AUTH-01**: User can log in with email and password
+- [x] **AUTH-02**: User session persists across browser refresh (stays logged in)
+- [x] **AUTH-03**: Access to menu sections and data is restricted by role per permissions matrix — enforced on both frontend (hidden sections) and backend (middleware per endpoint); `NONE` = hidden + 403, `READ` = GET only, `CRUD` = full access; Osoba nadzorująca on Zlecenia na lot = edit + view only (no create)
 - [x] **AUTH-04**: A user with role Pilot must be linked 1:1 to a crew member record; the system enforces this link at user creation and uses the crew member record for weight, license, and training data in flight orders
 
 ### Helicopters
@@ -102,9 +102,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
 | HELI-01 | Phase 2 | Pending |
 | HELI-02 | Phase 2 | Pending |

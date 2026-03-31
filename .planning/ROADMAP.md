@@ -12,7 +12,7 @@ AERO is built in four phases that follow the natural dependency chain of the app
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
+- [x] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
 - [ ] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
 - [ ] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history
 - [ ] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade
@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Scaffold monorepo (React + Vite + Tailwind + shadcn/ui, Express, shared types/enums/permissions)
 - [x] 01-02-PLAN.md — Complete database schema (all tables for Phases 1-4), connection pool, migration runner, seed script
-- [ ] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
+- [x] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
 **UI hint**: yes
 
 ### Phase 2: Admin Panel
@@ -99,7 +99,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete | 2026-03-31 |
 | 2. Admin Panel | 0/3 | Not started | - |
 | 3. Planned Operations | 0/3 | Not started | - |
 | 4. Flight Orders | 0/3 | Not started | - |
