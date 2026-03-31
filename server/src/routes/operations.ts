@@ -664,6 +664,256 @@ operationsRouter.put(
   }
 );
 
+// ─── POST /api/operations/:id/status — status transition ─────────────────────
+operationsRouter.post(
+  "/:id/status",
+  requirePermission("planowanie_operacji", PermissionLevel.READ),
+  async (req: Request, res: Response) => {
+    const id = parseInt(req.params["id"] as string, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "bad_request", message: "Nieprawidłowe ID." });
+    }
+
+    const role = req.session.role as UserRole;
+    const userId = req.session.userId!;
+    const { to_status, reason } = req.body;
+
+    if (to_status == null) {
+      return res.status(400).json({ error: "bad_request", message: "Pole to_status jest wymagane." });
+    }
+
+    const toStatus = parseInt(String(to_status), 10);
+    if (isNaN(toStatus)) {
+      return res.status(400).json({ error: "bad_request", message: "Nieprawidłowy status." });
+    }
+
+    const client = await pool.connect();
+    try {
+      const existing = await fetchOperationById(client, id);
+      if (!existing) {
+        return res.status(404).json({ error: "not_found", message: "Operacja nie istnieje." });
+      }
+
+      const fromStatus: number = existing.status;
+
+      // Define allowed transitions: [from, to, allowedRoles]
+      type TransitionRule = {
+        from: number;
+        to: number;
+        roles: UserRole[];
+        prereq?: (op: any) => string | null; // returns error message or null
+        ownOnly?: boolean; // planner can only cancel their own
+      };
+
+      const TRANSITIONS: TransitionRule[] = [
+        {
+          // Supervisor: reject (1 → 2)
+          from: 1, to: 2,
+          roles: [UserRole.SUPERVISOR],
+        },
+        {
+          // Supervisor: confirm (1 → 3) — requires planned dates
+          from: 1, to: 3,
+          roles: [UserRole.SUPERVISOR],
+          prereq: (op) => {
+            if (!op.planned_earliest_date || !op.planned_latest_date) {
+              return "Potwierdzenie wymaga wypełnienia planowanych dat (najwcześniejszej i najpóźniejszej).";
+            }
+            return null;
+          },
+        },
+        {
+          // Planner or Supervisor: cancel from status 1
+          from: 1, to: 7,
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          ownOnly: true,
+        },
+        {
+          // Planner or Supervisor: cancel from status 3
+          from: 3, to: 7,
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          ownOnly: true,
+        },
+        {
+          // Planner or Supervisor: cancel from status 4
+          from: 4, to: 7,
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          ownOnly: true,
+        },
+      ];
+
+      const rule = TRANSITIONS.find((t) => t.from === fromStatus && t.to === toStatus);
+
+      if (!rule) {
+        return res.status(400).json({
+          error: "bad_request",
+          message: `Przejście ze statusu ${fromStatus} do ${toStatus} jest niedozwolone.`,
+        });
+      }
+
+      if (!rule.roles.includes(role)) {
+        return res.status(403).json({
+          error: "forbidden",
+          message: "Brak uprawnień do tej zmiany statusu.",
+        });
+      }
+
+      // Planner "ownOnly" check — planner can only cancel their own operations
+      if (role === UserRole.PLANNER && rule.ownOnly) {
+        if (existing.created_by_user_id !== userId) {
+          return res.status(403).json({
+            error: "forbidden",
+            message: "Możesz anulować tylko własne operacje.",
+          });
+        }
+      }
+
+      // Prerequisite check
+      if (rule.prereq) {
+        const prereqError = rule.prereq(existing);
+        if (prereqError) {
+          return res.status(400).json({ error: "bad_request", message: prereqError });
+        }
+      }
+
+      await client.query("BEGIN");
+
+      await client.query(
+        `UPDATE planned_operations SET status = $1, updated_at = NOW() WHERE id = $2`,
+        [toStatus, id]
+      );
+
+      // Status labels for history
+      const STATUS_LABELS: Record<number, string> = {
+        1: "Wprowadzone",
+        2: "Odrzucone",
+        3: "Potwierdzone do planu",
+        4: "Zaplanowane do zlecenia",
+        5: "Częściowo zrealizowane",
+        6: "Zrealizowane",
+        7: "Rezygnacja",
+      };
+
+      await recordHistory(
+        client,
+        id,
+        userId,
+        "status",
+        STATUS_LABELS[fromStatus] ?? String(fromStatus),
+        STATUS_LABELS[toStatus] ?? String(toStatus)
+      );
+
+      if (reason && String(reason).trim()) {
+        await recordHistory(
+          client,
+          id,
+          userId,
+          "status_reason",
+          null,
+          String(reason).trim()
+        );
+      }
+
+      await client.query("COMMIT");
+
+      const updated = await fetchOperationById(pool, id);
+      return res.status(200).json({ operation: updated });
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Status transition error:", error);
+      return res.status(500).json({ error: "server_error", message: "Błąd serwera." });
+    } finally {
+      client.release();
+    }
+  }
+);
+
+// ─── GET /api/operations/:id/comments ────────────────────────────────────────
+operationsRouter.get(
+  "/:id/comments",
+  requirePermission("planowanie_operacji", PermissionLevel.READ),
+  async (req: Request, res: Response) => {
+    const id = parseInt(req.params["id"] as string, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "bad_request", message: "Nieprawidłowe ID." });
+    }
+
+    try {
+      const result = await pool.query(
+        `SELECT
+           oc.id,
+           oc.operation_id,
+           oc.user_id,
+           u.email AS author_email,
+           u.first_name || ' ' || u.last_name AS author_name,
+           oc.comment_text,
+           oc.created_at
+         FROM operation_comments oc
+         JOIN users u ON u.id = oc.user_id
+         WHERE oc.operation_id = $1
+         ORDER BY oc.created_at ASC`,
+        [id]
+      );
+      return res.status(200).json({ comments: result.rows });
+    } catch (error) {
+      console.error("Get comments error:", error);
+      return res.status(500).json({ error: "server_error", message: "Błąd serwera." });
+    }
+  }
+);
+
+// ─── POST /api/operations/:id/comments ───────────────────────────────────────
+operationsRouter.post(
+  "/:id/comments",
+  requirePermission("planowanie_operacji", PermissionLevel.READ),
+  async (req: Request, res: Response) => {
+    const id = parseInt(req.params["id"] as string, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "bad_request", message: "Nieprawidłowe ID." });
+    }
+
+    const { comment_text } = req.body;
+    if (!comment_text || !String(comment_text).trim()) {
+      return res.status(400).json({ error: "bad_request", message: "Treść komentarza jest wymagana." });
+    }
+    if (String(comment_text).trim().length > 500) {
+      return res.status(400).json({ error: "bad_request", message: "Komentarz max 500 znaków." });
+    }
+
+    try {
+      // Verify operation exists
+      const opCheck = await pool.query(`SELECT id FROM planned_operations WHERE id = $1`, [id]);
+      if (opCheck.rowCount === 0) {
+        return res.status(404).json({ error: "not_found", message: "Operacja nie istnieje." });
+      }
+
+      const insertRes = await pool.query(
+        `INSERT INTO operation_comments (operation_id, user_id, comment_text)
+         VALUES ($1, $2, $3)
+         RETURNING id, operation_id, user_id, comment_text, created_at`,
+        [id, req.session.userId, String(comment_text).trim()]
+      );
+
+      const comment = insertRes.rows[0];
+
+      // Join author info
+      const userRes = await pool.query(
+        `SELECT email, first_name || ' ' || last_name AS author_name FROM users WHERE id = $1`,
+        [req.session.userId]
+      );
+      if (userRes.rowCount && userRes.rowCount > 0) {
+        comment.author_email = userRes.rows[0].email;
+        comment.author_name = userRes.rows[0].author_name;
+      }
+
+      return res.status(201).json({ comment });
+    } catch (error) {
+      console.error("Create comment error:", error);
+      return res.status(500).json({ error: "server_error", message: "Błąd serwera." });
+    }
+  }
+);
+
 // ─── GET /api/operations/:id/history ─────────────────────────────────────────
 operationsRouter.get("/:id/history", async (req: Request, res: Response) => {
   const id = parseInt(req.params["id"] as string, 10);
