@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Plane,
   Users,
   MapPin,
   UserCog,
@@ -10,12 +9,26 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Menu,
+  LayoutDashboard,
 } from "lucide-react";
+
+function HelicopterIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M3 3h18" />
+      <path d="M12 3v7" />
+      <path d="M5 10h14l-2 5H7l-2-5z" />
+      <path d="M12 15v4" />
+      <path d="M8 19h8" />
+      <path d="M19 10l2 2" />
+    </svg>
+  );
+}
 import { ROLE_DISPLAY_PL } from "shared/roles";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
-import { PERMISSIONS, PermissionLevel, MenuSection } from "shared/permissions";
+import { PermissionLevel } from "shared/permissions";
+import type { MenuSection } from "shared/permissions";
 import {
   Tooltip,
   TooltipContent,
@@ -35,12 +48,17 @@ interface NavSection {
   items: NavItem[];
 }
 
+// Top-level items (always visible, no permission gating)
+const TOP_NAV_ITEMS: NavItem[] = [
+  { label: "Dashboard", path: "/", icon: LayoutDashboard },
+];
+
 const NAV_SECTIONS: NavSection[] = [
   {
     key: "administracja",
     label: "ADMINISTRACJA",
     items: [
-      { label: "Helikoptery", path: "/admin/helicopters", icon: Plane },
+      { label: "Helikoptery", path: "/admin/helicopters", icon: HelicopterIcon },
       { label: "Członkowie załogi", path: "/admin/crew", icon: Users },
       { label: "Lądowiska planowe", path: "/admin/airfields", icon: MapPin },
       { label: "Użytkownicy", path: "/admin/users", icon: UserCog },
@@ -72,7 +90,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
-  const { user, logout } = useAuth();
+  const { user, permissions, logout } = useAuth();
   const location = useLocation();
 
   // Determine default collapsed state based on window width
@@ -99,9 +117,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   if (!user) return null;
 
   // Filter sections by role permissions (D-07: not in DOM, not just hidden)
-  const visibleSections = NAV_SECTIONS.filter(
-    (section) => PERMISSIONS[user.role][section.key] !== PermissionLevel.NONE
-  );
+  const visibleSections = NAV_SECTIONS.filter((section) => {
+    if (!permissions) return false;
+    const level = permissions[section.key];
+    return level && level !== PermissionLevel.NONE;
+  });
 
   const sidebarContent = (
     <TooltipProvider delayDuration={300}>
@@ -115,6 +135,57 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-lg">
+          {/* Top-level items */}
+          <div className="mb-lg">
+            {TOP_NAV_ITEMS.map((item) => {
+              const isActive =
+                item.path === "/"
+                  ? location.pathname === "/"
+                  : location.pathname === item.path ||
+                    location.pathname.startsWith(item.path + "/");
+              const Icon = item.icon;
+
+              if (collapsed) {
+                return (
+                  <Tooltip key={item.path}>
+                    <TooltipTrigger asChild>
+                      <NavLink
+                        to={item.path}
+                        className={cn(
+                          "flex h-10 w-full items-center justify-center transition-colors",
+                          isActive
+                            ? "bg-primary text-white"
+                            : "text-text hover:bg-border-subtle"
+                        )}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </NavLink>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <p>{item.label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "flex h-10 items-center gap-sm px-md text-sm transition-colors",
+                    isActive
+                      ? "bg-primary text-white"
+                      : "text-text hover:bg-border-subtle"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </div>
+
           {visibleSections.map((section) => (
             <div key={section.key} className="mb-lg">
               {/* Section header */}

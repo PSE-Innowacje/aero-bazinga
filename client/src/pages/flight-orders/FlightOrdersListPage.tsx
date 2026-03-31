@@ -33,7 +33,7 @@ interface FlightOrderListItem {
 }
 
 function formatDateTime(dateStr: string | null | undefined): string {
-  if (!dateStr) return "\u2014";
+  if (!dateStr) return "—";
   return new Date(dateStr).toLocaleString("pl-PL");
 }
 
@@ -68,8 +68,8 @@ const STATUS_OPTIONS = [
   { value: "2", label: "Przekazane do akceptacji" },
   { value: "3", label: "Odrzucone" },
   { value: "4", label: "Zaakceptowane" },
-  { value: "5", label: "Zrealizowane w cz\u0119\u015Bci" },
-  { value: "6", label: "Zrealizowane w ca\u0142o\u015Bci" },
+  { value: "5", label: "Zrealizowane w części" },
+  { value: "6", label: "Zrealizowane w całości" },
   { value: "7", label: "Nie zrealizowane" },
 ];
 
@@ -83,7 +83,7 @@ export function FlightOrdersListPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const canCreate = user?.role === UserRole.PILOT;
+  const canCreate = user?.role === UserRole.PILOT || user?.role === UserRole.SUPERADMIN;
 
   useEffect(() => {
     setIsLoading(true);
@@ -96,7 +96,7 @@ export function FlightOrdersListPage() {
 
     fetch(url, { credentials: "include" })
       .then((res) => {
-        if (!res.ok) throw new Error("Nie uda\u0142o si\u0119 pobra\u0107 listy zlece\u0144.");
+        if (!res.ok) throw new Error("Nie udało się pobrać listy zleceń.");
         return res.json();
       })
       .then((data) => {
@@ -147,7 +147,7 @@ export function FlightOrdersListPage() {
       </div>
 
       {isLoading && (
-        <p className="text-body text-text-muted">\u0141adowanie...</p>
+        <p className="text-body text-text-muted">Ładowanie...</p>
       )}
 
       {error && (
@@ -158,7 +158,7 @@ export function FlightOrdersListPage() {
 
       {!isLoading && !error && orders.length === 0 && (
         <p className="text-body text-text-muted">
-          Brak zlece\u0144 dla wybranego filtra.
+          Brak zleceń dla wybranego filtra.
         </p>
       )}
 
@@ -168,7 +168,7 @@ export function FlightOrdersListPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Numer zlecenia</TableHead>
-                <TableHead>Planowane rozpocz\u0119cie</TableHead>
+                <TableHead>Planowane rozpoczęcie</TableHead>
                 <TableHead>Helikopter</TableHead>
                 <TableHead>Pilot</TableHead>
                 <TableHead>Status</TableHead>

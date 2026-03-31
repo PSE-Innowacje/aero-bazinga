@@ -21,6 +21,7 @@ import { OperationDetailPage } from "@/pages/operations/OperationDetailPage";
 import { FlightOrdersListPage } from "@/pages/flight-orders/FlightOrdersListPage";
 import { FlightOrderFormPage } from "@/pages/flight-orders/FlightOrderFormPage";
 import { FlightOrderDetailPage } from "@/pages/flight-orders/FlightOrderDetailPage";
+import { PermissionsPage } from "@/pages/admin/PermissionsPage";
 
 // Placeholder page for sections not yet implemented
 function PlaceholderPage({ title }: { title: string }) {
@@ -85,6 +86,7 @@ export default function App() {
                     <Route path="users" element={<UsersPage />} />
                     <Route path="users/new" element={<UserFormPage />} />
                     <Route path="users/:id/edit" element={<UserFormPage />} />
+                    <Route path="permissions" element={<PermissionsPage />} />
                     <Route path="*" element={<PlaceholderPage title="Administracja" />} />
                   </Routes>
                 </AppShell>

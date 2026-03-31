@@ -15,6 +15,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CREW_ROLES } from "shared/crew-roles";
+import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 
 // Email validation matching CREW-03 server-side rule
 function isValidCrewEmail(email: string): boolean {
@@ -90,6 +93,13 @@ export function CrewMemberFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
+  const { user, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
+
+  if (!canEdit) {
+    navigate("/admin/crew");
+    return null;
+  }
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(isEdit);
@@ -329,7 +339,7 @@ export function CrewMemberFormPage() {
                   <FormItem>
                     <FormLabel>Data ważności licencji</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <DatePicker value={field.value || ""} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

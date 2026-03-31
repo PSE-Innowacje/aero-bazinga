@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserRole, ROLE_DISPLAY_PL } from "shared/roles";
+import { PermissionLevel } from "shared/permissions";
+import { useAuth } from "@/context/AuthContext";
 import type { CrewMember } from "shared/types";
 
 // Email validation per CREW-03 / USR-01
@@ -67,6 +69,13 @@ export function UserFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
+  const { user: currentUser, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
+
+  if (!canEdit) {
+    navigate("/admin/users");
+    return null;
+  }
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(isEdit);

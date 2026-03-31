@@ -7,10 +7,26 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Enum type for user roles (must match shared/src/roles.ts UserRole exactly)
 DO $$ BEGIN
-  CREATE TYPE user_role AS ENUM ('administrator', 'planner', 'supervisor', 'pilot');
+  CREATE TYPE user_role AS ENUM ('superadmin', 'administrator', 'planner', 'supervisor', 'pilot');
 EXCEPTION
   WHEN duplicate_object THEN null;
 END $$;
+
+-- Add superadmin to existing enum if it doesn't exist
+DO $$ BEGIN
+  ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'superadmin' BEFORE 'administrator';
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
+
+-- role_permissions (dynamic permission matrix)
+CREATE TABLE IF NOT EXISTS role_permissions (
+  id SERIAL PRIMARY KEY,
+  role user_role NOT NULL,
+  section VARCHAR(50) NOT NULL,
+  level VARCHAR(20) NOT NULL DEFAULT 'NONE',
+  UNIQUE(role, section)
+);
 
 -- Sequences for auto-numbering
 CREATE SEQUENCE IF NOT EXISTS operation_number_seq START 1;

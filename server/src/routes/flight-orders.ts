@@ -346,7 +346,7 @@ flightOrdersRouter.post(
     const role = req.session.role as UserRole;
 
     // Only pilot can create (FLT-01)
-    if (role !== UserRole.PILOT) {
+    if (role !== UserRole.PILOT && role !== UserRole.SUPERADMIN) {
       return res.status(403).json({
         error: "forbidden",
         message: "Tylko pilot moze tworzyc zlecenia na lot.",
@@ -594,18 +594,20 @@ flightOrdersRouter.put(
       const pilotEditStatuses = [1, 3];
       const supervisorEditStatuses = [1, 2, 3, 4];
 
-      if (role === UserRole.PILOT && !pilotEditStatuses.includes(existing.status)) {
-        return res.status(403).json({
-          error: "forbidden",
-          message: "Nie mozesz edytowac zlecenia w tym statusie.",
-        });
-      }
+      if (role !== UserRole.SUPERADMIN) {
+        if (role === UserRole.PILOT && !pilotEditStatuses.includes(existing.status)) {
+          return res.status(403).json({
+            error: "forbidden",
+            message: "Nie mozesz edytowac zlecenia w tym statusie.",
+          });
+        }
 
-      if (role === UserRole.SUPERVISOR && !supervisorEditStatuses.includes(existing.status)) {
-        return res.status(403).json({
-          error: "forbidden",
-          message: "Nie mozesz edytowac zlecenia w tym statusie.",
-        });
+        if (role === UserRole.SUPERVISOR && !supervisorEditStatuses.includes(existing.status)) {
+          return res.status(403).json({
+            error: "forbidden",
+            message: "Nie mozesz edytowac zlecenia w tym statusie.",
+          });
+        }
       }
 
       const body = req.body;
@@ -896,17 +898,17 @@ flightOrdersRouter.post(
 
       const TRANSITIONS: TransitionRule[] = [
         // FLT-06: Pilot submit (1 -> 2)
-        { from: 1, to: 2, roles: [UserRole.PILOT] },
+        { from: 1, to: 2, roles: [UserRole.PILOT, UserRole.SUPERADMIN] },
         // FLT-07: Supervisor accept (2 -> 4)
-        { from: 2, to: 4, roles: [UserRole.SUPERVISOR] },
+        { from: 2, to: 4, roles: [UserRole.SUPERVISOR, UserRole.SUPERADMIN] },
         // FLT-07: Supervisor reject (2 -> 3)
-        { from: 2, to: 3, roles: [UserRole.SUPERVISOR] },
+        { from: 2, to: 3, roles: [UserRole.SUPERVISOR, UserRole.SUPERADMIN] },
         // FLT-08: Pilot completion - partial (4 -> 5), cascade ops -> 5
-        { from: 4, to: 5, roles: [UserRole.PILOT], cascadeOpsTo: 5, requireActualDatetime: true },
+        { from: 4, to: 5, roles: [UserRole.PILOT, UserRole.SUPERADMIN], cascadeOpsTo: 5, requireActualDatetime: true },
         // FLT-08: Pilot completion - full (4 -> 6), cascade ops -> 6
-        { from: 4, to: 6, roles: [UserRole.PILOT], cascadeOpsTo: 6, requireActualDatetime: true },
+        { from: 4, to: 6, roles: [UserRole.PILOT, UserRole.SUPERADMIN], cascadeOpsTo: 6, requireActualDatetime: true },
         // FLT-08: Pilot completion - not completed (4 -> 7), cascade ops -> 3
-        { from: 4, to: 7, roles: [UserRole.PILOT], cascadeOpsTo: 3 },
+        { from: 4, to: 7, roles: [UserRole.PILOT, UserRole.SUPERADMIN], cascadeOpsTo: 3 },
       ];
 
       const rule = TRANSITIONS.find((t) => t.from === fromStatus && t.to === toStatus);

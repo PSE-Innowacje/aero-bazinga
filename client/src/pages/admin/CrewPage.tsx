@@ -10,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 import type { CrewMember } from "shared/types";
 
 function formatDate(dateStr: string | null): string {
@@ -19,6 +21,8 @@ function formatDate(dateStr: string | null): string {
 
 export function CrewPage() {
   const navigate = useNavigate();
+  const { user, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
   const [crew, setCrew] = useState<CrewMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,13 +48,15 @@ export function CrewPage() {
     <div>
       <div className="flex items-center justify-between mb-xl">
         <h1 className="text-heading font-semibold text-primary">Członkowie załogi</h1>
-        <Button
-          onClick={() => navigate("/admin/crew/new")}
-          className="bg-primary text-white hover:bg-primary-hover"
-        >
-          <Plus className="mr-sm h-4 w-4" />
-          Dodaj członka załogi
-        </Button>
+        {canEdit && (
+          <Button
+            onClick={() => navigate("/admin/crew/new")}
+            className="bg-primary text-white hover:bg-primary-hover"
+          >
+            <Plus className="mr-sm h-4 w-4" />
+            Dodaj członka załogi
+          </Button>
+        )}
       </div>
 
       {isLoading && <p className="text-body text-text-muted">Ładowanie...</p>}
@@ -76,7 +82,7 @@ export function CrewPage() {
                 <TableHead>Rola</TableHead>
                 <TableHead>Ważność licencji</TableHead>
                 <TableHead>Ważność szkolenia</TableHead>
-                <TableHead className="w-[60px]" />
+                {canEdit && <TableHead className="w-[60px]" />}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -86,16 +92,18 @@ export function CrewPage() {
                   <TableCell>{member.role}</TableCell>
                   <TableCell>{formatDate(member.license_expiry_date)}</TableCell>
                   <TableCell>{formatDate(member.training_expiry_date)}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigate(`/admin/crew/${member.id}/edit`)}
-                      aria-label="Edytuj członka załogi"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+                  {canEdit && (
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigate(`/admin/crew/${member.id}/edit`)}
+                        aria-label="Edytuj członka załogi"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

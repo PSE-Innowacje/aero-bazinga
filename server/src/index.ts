@@ -12,6 +12,9 @@ import { usersRouter } from "./routes/users.js";
 import { operationsRouter } from "./routes/operations.js";
 import { flightOrdersRouter } from "./routes/flight-orders.js";
 import { PermissionLevel } from "shared/permissions";
+import { loadPermissions } from "./db/permissions-cache.js";
+import { permissionsRouter } from "./routes/permissions.js";
+import { dashboardRouter } from "./routes/dashboard.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +38,9 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
+// Dashboard API
+app.use("/api/dashboard", dashboardRouter);
+
 // Phase 2+ endpoints will be mounted here
 app.use(
   "/api/admin",
@@ -47,6 +53,7 @@ app.use("/api/admin/helicopters", helicoptersRouter);
 app.use("/api/admin/crew", crewRouter);
 app.use("/api/admin/airfields", airfieldsRouter);
 app.use("/api/admin/users", usersRouter);
+app.use("/api/admin/permissions", permissionsRouter);
 app.use(
   "/api/operations",
   requireAuth,
@@ -64,8 +71,19 @@ app.use(
 // Flight orders router (Phase 4)
 app.use("/api/flight-orders", flightOrdersRouter);
 
-app.listen(PORT, () => {
-  console.log(`AERO server running on port ${PORT}`);
-});
+// Load dynamic permissions from DB, then start server
+loadPermissions()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`AERO server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to load permissions:", err);
+    // Start anyway with static fallback
+    app.listen(PORT, () => {
+      console.log(`AERO server running on port ${PORT} (static permissions fallback)`);
+    });
+  });
 
 export default app;

@@ -1,4 +1,5 @@
 export enum UserRole {
+  SUPERADMIN = "superadmin",
   ADMINISTRATOR = "administrator",
   PLANNER = "planner",
   SUPERVISOR = "supervisor",
@@ -6,6 +7,7 @@ export enum UserRole {
 }
 
 export const ROLE_LABELS_PL: Record<UserRole, string> = {
+  [UserRole.SUPERADMIN]: "Superadministrator",
   [UserRole.ADMINISTRATOR]: "Administrator systemu",
   [UserRole.PLANNER]: "Osoba planujaca",
   [UserRole.SUPERVISOR]: "Osoba nadzorujaca",
@@ -13,6 +15,7 @@ export const ROLE_LABELS_PL: Record<UserRole, string> = {
 };
 
 export const ROLE_DISPLAY_PL: Record<UserRole, string> = {
+  [UserRole.SUPERADMIN]: "Superadministrator",
   [UserRole.ADMINISTRATOR]: "Administrator systemu",
   [UserRole.PLANNER]: "Osoba planująca",
   [UserRole.SUPERVISOR]: "Osoba nadzorująca",

@@ -141,7 +141,7 @@ export function OperationDetailPage() {
   const [statusActionLoading, setStatusActionLoading] = useState(false);
 
   const role = user?.role as UserRole | undefined;
-  const isSupervisor = role === UserRole.SUPERVISOR;
+  const isSupervisor = role === UserRole.SUPERVISOR || role === UserRole.SUPERADMIN;
   const isPlanner = role === UserRole.PLANNER;
 
   function loadOperation() {

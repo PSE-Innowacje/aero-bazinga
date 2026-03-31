@@ -11,10 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 import type { Helicopter } from "shared/types";
 
 export function HelicoptersPage() {
   const navigate = useNavigate();
+  const { user, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
   const [helicopters, setHelicopters] = useState<Helicopter[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,13 +44,15 @@ export function HelicoptersPage() {
     <div>
       <div className="flex items-center justify-between mb-xl">
         <h1 className="text-heading font-semibold text-primary">Helikoptery</h1>
-        <Button
-          onClick={() => navigate("/admin/helicopters/new")}
-          className="bg-primary text-white hover:bg-primary-hover"
-        >
-          <Plus className="mr-sm h-4 w-4" />
-          Dodaj helikopter
-        </Button>
+        {canEdit && (
+          <Button
+            onClick={() => navigate("/admin/helicopters/new")}
+            className="bg-primary text-white hover:bg-primary-hover"
+          >
+            <Plus className="mr-sm h-4 w-4" />
+            Dodaj helikopter
+          </Button>
+        )}
       </div>
 
       {isLoading && (
@@ -73,7 +79,7 @@ export function HelicoptersPage() {
                 <TableHead>Numer rejestracyjny</TableHead>
                 <TableHead>Typ</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="w-[60px]" />
+                {canEdit && <TableHead className="w-[60px]" />}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -90,18 +96,20 @@ export function HelicoptersPage() {
                       <Badge variant="destructive">Nieaktywny</Badge>
                     )}
                   </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        navigate(`/admin/helicopters/${helicopter.id}/edit`)
-                      }
-                      aria-label="Edytuj helikopter"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+                  {canEdit && (
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          navigate(`/admin/helicopters/${helicopter.id}/edit`)
+                        }
+                        aria-label="Edytuj helikopter"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

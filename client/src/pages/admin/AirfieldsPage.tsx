@@ -10,10 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 import type { Airfield } from "shared/types";
 
 export function AirfieldsPage() {
   const navigate = useNavigate();
+  const { user, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
   const [airfields, setAirfields] = useState<Airfield[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,13 +43,15 @@ export function AirfieldsPage() {
     <div>
       <div className="flex items-center justify-between mb-xl">
         <h1 className="text-heading font-semibold text-primary">Lądowiska planowe</h1>
-        <Button
-          onClick={() => navigate("/admin/airfields/new")}
-          className="bg-primary text-white hover:bg-primary-hover"
-        >
-          <Plus className="mr-sm h-4 w-4" />
-          Dodaj lądowisko
-        </Button>
+        {canEdit && (
+          <Button
+            onClick={() => navigate("/admin/airfields/new")}
+            className="bg-primary text-white hover:bg-primary-hover"
+          >
+            <Plus className="mr-sm h-4 w-4" />
+            Dodaj lądowisko
+          </Button>
+        )}
       </div>
 
       {isLoading && <p className="text-body text-text-muted">Ładowanie...</p>}
@@ -70,7 +76,7 @@ export function AirfieldsPage() {
                 <TableHead>Nazwa</TableHead>
                 <TableHead>Szerokość geogr.</TableHead>
                 <TableHead>Długość geogr.</TableHead>
-                <TableHead className="w-[60px]" />
+                {canEdit && <TableHead className="w-[60px]" />}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -79,16 +85,18 @@ export function AirfieldsPage() {
                   <TableCell className="font-medium">{airfield.name}</TableCell>
                   <TableCell>{airfield.latitude}</TableCell>
                   <TableCell>{airfield.longitude}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigate(`/admin/airfields/${airfield.id}/edit`)}
-                      aria-label="Edytuj lądowisko"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+                  {canEdit && (
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigate(`/admin/airfields/${airfield.id}/edit`)}
+                        aria-label="Edytuj lądowisko"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

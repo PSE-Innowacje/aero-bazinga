@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronLeft, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DateTimePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import type { FlightOrder, KmlPoint } from "shared/types";
@@ -11,7 +11,7 @@ import { UserRole } from "shared/roles";
 import "leaflet/dist/leaflet.css";
 
 function formatDateTime(dateStr: string | null | undefined): string {
-  if (!dateStr) return "\u2014";
+  if (!dateStr) return "—";
   return new Date(dateStr).toLocaleString("pl-PL");
 }
 
@@ -48,7 +48,7 @@ function InfoRow({
   return (
     <div className="py-xs">
       <dt className="text-xs font-medium text-text-muted">{label}</dt>
-      <dd className="mt-xs text-sm text-text">{value || "\u2014"}</dd>
+      <dd className="mt-xs text-sm text-text">{value || "—"}</dd>
     </div>
   );
 }
@@ -152,7 +152,7 @@ function FlightOrderMap({
         });
         L.marker([endAirfield.lat, endAirfield.lng], { icon: endIcon })
           .addTo(map)
-          .bindPopup(`L\u0105dowanie: ${endAirfield.name}`);
+          .bindPopup(`Lądowanie: ${endAirfield.name}`);
         bounds.push([endAirfield.lat, endAirfield.lng]);
       }
 
@@ -214,13 +214,13 @@ export function FlightOrderDetailPage() {
   } | null>(null);
 
   const role = user?.role as UserRole | undefined;
-  const isPilot = role === UserRole.PILOT;
-  const isSupervisor = role === UserRole.SUPERVISOR;
+  const isPilot = role === UserRole.PILOT || role === UserRole.SUPERADMIN;
+  const isSupervisor = role === UserRole.SUPERVISOR || role === UserRole.SUPERADMIN;
 
   function loadOrder() {
     return fetch(`/api/flight-orders/${id}`, { credentials: "include" })
       .then((res) => {
-        if (!res.ok) throw new Error("Nie uda\u0142o si\u0119 pobra\u0107 zlecenia.");
+        if (!res.ok) throw new Error("Nie udało się pobrać zlecenia.");
         return res.json();
       })
       .then((data) => {
@@ -285,13 +285,13 @@ export function FlightOrderDetailPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setStatusActionError(data.message || "B\u0142\u0105d zmiany statusu.");
+        setStatusActionError(data.message || "Błąd zmiany statusu.");
         return;
       }
       setOrder(data.order);
       setShowCompletionDialog(false);
     } catch {
-      setStatusActionError("B\u0142\u0105d serwera.");
+      setStatusActionError("Błąd serwera.");
     } finally {
       setStatusActionLoading(false);
     }
@@ -314,7 +314,7 @@ export function FlightOrderDetailPage() {
   function submitCompletion() {
     if (!actualStart || !actualEnd) {
       setCompletionError(
-        "Rzeczywista data rozpocz\u0119cia i zako\u0144czenia s\u0105 wymagane."
+        "Rzeczywista data rozpoczęcia i zakończenia są wymagane."
       );
       return;
     }
@@ -326,7 +326,7 @@ export function FlightOrderDetailPage() {
   }
 
   if (isLoading)
-    return <p className="text-body text-text-muted">\u0141adowanie...</p>;
+    return <p className="text-body text-text-muted">Ładowanie...</p>;
   if (error)
     return (
       <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">
@@ -385,7 +385,7 @@ export function FlightOrderDetailPage() {
               disabled={statusActionLoading}
               onClick={() => doStatusTransition(2)}
             >
-              Przeka\u017C do akceptacji
+              Przekaż do akceptacji
             </Button>
           )}
           {canReject && (
@@ -396,7 +396,7 @@ export function FlightOrderDetailPage() {
               disabled={statusActionLoading}
               onClick={() => doStatusTransition(3)}
             >
-              Odrzu\u0107
+              Odrzuć
             </Button>
           )}
           {canAccept && (
@@ -417,7 +417,7 @@ export function FlightOrderDetailPage() {
                 disabled={statusActionLoading}
                 onClick={() => handleCompletion(5)}
               >
-                Zrealizowane w cz\u0119\u015Bci
+                Zrealizowane w części
               </Button>
               <Button
                 size="sm"
@@ -425,7 +425,7 @@ export function FlightOrderDetailPage() {
                 disabled={statusActionLoading}
                 onClick={() => handleCompletion(6)}
               >
-                Zrealizowane w ca\u0142o\u015Bci
+                Zrealizowane w całości
               </Button>
               <Button
                 size="sm"
@@ -455,23 +455,19 @@ export function FlightOrderDetailPage() {
           </h3>
           <div className="grid grid-cols-2 gap-md">
             <div>
-              <Label htmlFor="actual_start">Rzeczywiste rozpocz\u0119cie *</Label>
-              <Input
+              <Label htmlFor="actual_start">Rzeczywiste rozpoczęcie *</Label>
+              <DateTimePicker
                 id="actual_start"
-                type="datetime-local"
                 value={actualStart}
-                onChange={(e) => setActualStart(e.target.value)}
-                className="mt-xs"
+                onChange={(value) => setActualStart(value)}
               />
             </div>
             <div>
-              <Label htmlFor="actual_end">Rzeczywiste zako\u0144czenie *</Label>
-              <Input
+              <Label htmlFor="actual_end">Rzeczywiste zakończenie *</Label>
+              <DateTimePicker
                 id="actual_end"
-                type="datetime-local"
                 value={actualEnd}
-                onChange={(e) => setActualEnd(e.target.value)}
-                className="mt-xs"
+                onChange={(value) => setActualEnd(value)}
               />
             </div>
           </div>
@@ -485,7 +481,7 @@ export function FlightOrderDetailPage() {
               disabled={statusActionLoading}
               onClick={submitCompletion}
             >
-              Potwierd\u017A
+              Potwierdź
             </Button>
             <Button
               size="sm"
@@ -501,7 +497,7 @@ export function FlightOrderDetailPage() {
       {/* Order details */}
       <div className="mb-xl rounded-md border border-border bg-white p-lg">
         <h2 className="mb-md text-base font-semibold text-text">
-          Szczeg\u00F3\u0142y zlecenia
+          Szczegóły zlecenia
         </h2>
         <dl className="grid grid-cols-2 gap-md">
           <InfoRow label="Numer zlecenia" value={order.order_number} />
@@ -512,19 +508,19 @@ export function FlightOrderDetailPage() {
           />
           <InfoRow label="Status" value={<StatusBadge status={status} />} />
           <InfoRow
-            label="Planowane rozpocz\u0119cie"
+            label="Planowane rozpoczęcie"
             value={formatDateTime(order.planned_start_datetime)}
           />
           <InfoRow
-            label="Planowane zako\u0144czenie"
+            label="Planowane zakończenie"
             value={formatDateTime(order.planned_end_datetime)}
           />
           <InfoRow
-            label="Rzeczywiste rozpocz\u0119cie"
+            label="Rzeczywiste rozpoczęcie"
             value={formatDateTime(order.actual_start_datetime)}
           />
           <InfoRow
-            label="Rzeczywiste zako\u0144czenie"
+            label="Rzeczywiste zakończenie"
             value={formatDateTime(order.actual_end_datetime)}
           />
           <InfoRow
@@ -536,19 +532,19 @@ export function FlightOrderDetailPage() {
             value={order.end_airfield_name}
           />
           <InfoRow
-            label="\u0141\u0105czna waga za\u0142ogi"
+            label="Łączna waga załogi"
             value={
               order.crew_total_weight_kg != null
                 ? `${order.crew_total_weight_kg} kg`
-                : "\u2014"
+                : "—"
             }
           />
           <InfoRow
-            label="Szacowana d\u0142ugo\u015B\u0107 trasy"
+            label="Szacowana długość trasy"
             value={
               order.estimated_route_length_km != null
                 ? `${order.estimated_route_length_km.toFixed(2)} km`
-                : "\u2014"
+                : "—"
             }
           />
           <InfoRow
@@ -565,18 +561,18 @@ export function FlightOrderDetailPage() {
       {/* Crew members */}
       <div className="mb-xl rounded-md border border-border bg-white p-lg">
         <h2 className="mb-md text-base font-semibold text-text">
-          Za\u0142oga
+          Załoga
         </h2>
         {order.crew_members.length === 0 ? (
           <p className="text-sm text-text-muted">
-            Brak dodatkowych cz\u0142onk\u00F3w za\u0142ogi.
+            Brak dodatkowych członków załogi.
           </p>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
                 <th className="py-xs pr-md text-left text-xs font-medium text-text-muted">
-                  Imi\u0119 i nazwisko
+                  Imię i nazwisko
                 </th>
                 <th className="py-xs pr-md text-left text-xs font-medium text-text-muted">
                   Rola
@@ -585,7 +581,7 @@ export function FlightOrderDetailPage() {
                   Waga (kg)
                 </th>
                 <th className="py-xs text-left text-xs font-medium text-text-muted">
-                  Szkolenie wa\u017Cne do
+                  Szkolenie ważne do
                 </th>
               </tr>
             </thead>
@@ -603,7 +599,7 @@ export function FlightOrderDetailPage() {
                   <td className="py-xs text-sm">
                     {cm.training_expiry_date
                       ? cm.training_expiry_date.substring(0, 10)
-                      : "\u2014"}
+                      : "—"}
                   </td>
                 </tr>
               ))}
@@ -615,10 +611,10 @@ export function FlightOrderDetailPage() {
       {/* Linked operations */}
       <div className="mb-xl rounded-md border border-border bg-white p-lg">
         <h2 className="mb-md text-base font-semibold text-text">
-          Powi\u0105zane operacje
+          Powiązane operacje
         </h2>
         {order.operations.length === 0 ? (
-          <p className="text-sm text-text-muted">Brak powi\u0105zanych operacji.</p>
+          <p className="text-sm text-text-muted">Brak powiązanych operacji.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
@@ -630,7 +626,7 @@ export function FlightOrderDetailPage() {
                   Opis
                 </th>
                 <th className="py-xs text-left text-xs font-medium text-text-muted">
-                  D\u0142ugo\u015B\u0107 trasy
+                  Długość trasy
                 </th>
               </tr>
             </thead>
@@ -650,7 +646,7 @@ export function FlightOrderDetailPage() {
                   <td className="py-xs text-sm">
                     {op.route_distance_km != null
                       ? `${op.route_distance_km.toFixed(2)} km`
-                      : "\u2014"}
+                      : "—"}
                   </td>
                 </tr>
               ))}

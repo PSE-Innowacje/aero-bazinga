@@ -10,6 +10,11 @@ export enum PermissionLevel {
 export type MenuSection = "administracja" | "planowanie_operacji" | "zlecenia_na_lot";
 
 export const PERMISSIONS: Record<UserRole, Record<MenuSection, PermissionLevel>> = {
+  [UserRole.SUPERADMIN]: {
+    administracja: PermissionLevel.CRUD,
+    planowanie_operacji: PermissionLevel.CRUD,
+    zlecenia_na_lot: PermissionLevel.CRUD,
+  },
   [UserRole.ADMINISTRATOR]: {
     administracja: PermissionLevel.CRUD,
     planowanie_operacji: PermissionLevel.READ,

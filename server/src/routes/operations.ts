@@ -249,7 +249,7 @@ operationsRouter.post(
     const role = req.session.role as UserRole;
 
     // Only planner and supervisor can create operations (admin + pilot have READ)
-    if (role !== UserRole.PLANNER && role !== UserRole.SUPERVISOR) {
+    if (role !== UserRole.PLANNER && role !== UserRole.SUPERVISOR && role !== UserRole.SUPERADMIN) {
       // Clean up uploaded file
       if (req.file) fs.unlinkSync(req.file.path);
       return res.status(403).json({ error: "forbidden", message: "Brak uprawnień do tworzenia operacji." });
@@ -534,8 +534,8 @@ operationsRouter.put(
         addField("additional_info", body.additional_info?.trim() || null, null);
       }
 
-      // Supervisor-only fields
-      if (role === UserRole.SUPERVISOR) {
+      // Supervisor-only fields (superadmin also has access)
+      if (role === UserRole.SUPERVISOR || role === UserRole.SUPERADMIN) {
         if (body.planned_earliest_date !== undefined) {
           addField("planned_earliest_date", body.planned_earliest_date || null, null);
         }
@@ -709,12 +709,12 @@ operationsRouter.post(
         {
           // Supervisor: reject (1 → 2)
           from: 1, to: 2,
-          roles: [UserRole.SUPERVISOR],
+          roles: [UserRole.SUPERVISOR, UserRole.SUPERADMIN],
         },
         {
           // Supervisor: confirm (1 → 3) — requires planned dates
           from: 1, to: 3,
-          roles: [UserRole.SUPERVISOR],
+          roles: [UserRole.SUPERVISOR, UserRole.SUPERADMIN],
           prereq: (op) => {
             if (!op.planned_earliest_date || !op.planned_latest_date) {
               return "Potwierdzenie wymaga wypełnienia planowanych dat (najwcześniejszej i najpóźniejszej).";
@@ -725,19 +725,19 @@ operationsRouter.post(
         {
           // Planner or Supervisor: cancel from status 1
           from: 1, to: 7,
-          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR, UserRole.SUPERADMIN],
           ownOnly: true,
         },
         {
           // Planner or Supervisor: cancel from status 3
           from: 3, to: 7,
-          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR, UserRole.SUPERADMIN],
           ownOnly: true,
         },
         {
           // Planner or Supervisor: cancel from status 4
           from: 4, to: 7,
-          roles: [UserRole.PLANNER, UserRole.SUPERVISOR],
+          roles: [UserRole.PLANNER, UserRole.SUPERVISOR, UserRole.SUPERADMIN],
           ownOnly: true,
         },
       ];

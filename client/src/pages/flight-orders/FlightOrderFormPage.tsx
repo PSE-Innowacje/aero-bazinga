@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DateTimePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -23,6 +23,7 @@ import type {
 } from "shared/types";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
+import { PermissionLevel } from "shared/permissions";
 import "leaflet/dist/leaflet.css";
 
 interface FormErrors {
@@ -118,7 +119,7 @@ function FormMap({
         });
         L.marker([endAirfield.latitude, endAirfield.longitude], { icon: endIcon })
           .addTo(map)
-          .bindPopup(`L\u0105dowanie: ${endAirfield.name}`);
+          .bindPopup(`Lądowanie: ${endAirfield.name}`);
         bounds.push([endAirfield.latitude, endAirfield.longitude]);
       }
 
@@ -150,9 +151,11 @@ export function FlightOrderFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
-  const { user } = useAuth();
+  const { user, permissions } = useAuth();
 
-  const isPilot = user?.role === UserRole.PILOT;
+  const isPilot = user?.role === UserRole.PILOT || user?.role === UserRole.SUPERADMIN;
+  const canCreate = permissions?.zlecenia_na_lot === PermissionLevel.CRUD;
+  const canEditFO = permissions ? [PermissionLevel.CRUD, PermissionLevel.EDIT_VIEW].includes(permissions.zlecenia_na_lot) : false;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -211,7 +214,7 @@ export function FlightOrderFormPage() {
     if (isEdit && id) {
       fetch(`/api/flight-orders/${id}`, { credentials: "include" })
         .then((res) => {
-          if (!res.ok) throw new Error("Nie uda\u0142o si\u0119 pobra\u0107 zlecenia.");
+          if (!res.ok) throw new Error("Nie udało się pobrać zlecenia.");
           return res.json();
         })
         .then((data) => {
@@ -312,8 +315,8 @@ export function FlightOrderFormPage() {
 
   function validate(): FormErrors {
     const errs: FormErrors = {};
-    if (!plannedStartDatetime) errs.planned_start_datetime = "Data rozpocz\u0119cia jest wymagana.";
-    if (!plannedEndDatetime) errs.planned_end_datetime = "Data zako\u0144czenia jest wymagana.";
+    if (!plannedStartDatetime) errs.planned_start_datetime = "Data rozpoczęcia jest wymagana.";
+    if (!plannedEndDatetime) errs.planned_end_datetime = "Data zakończenia jest wymagana.";
     if (!helicopterId) errs.helicopter_id = "Helikopter jest wymagany.";
     if (!startAirfieldId) errs.start_airfield_id = "Lotnisko startowe jest wymagane.";
     if (!endAirfieldId) errs.end_airfield_id = "Lotnisko docelowe jest wymagane.";
@@ -355,15 +358,15 @@ export function FlightOrderFormPage() {
       if (!res.ok) {
         if (data.warnings) {
           setValidationWarnings(data.warnings);
-          setErrors({ server: data.message || "Walidacja nie powiod\u0142a si\u0119." });
+          setErrors({ server: data.message || "Walidacja nie powiodła się." });
         } else {
-          setErrors({ server: data.message || "B\u0142\u0105d serwera." });
+          setErrors({ server: data.message || "Błąd serwera." });
         }
         return;
       }
       navigate(`/flight-orders/${data.order.id}`);
     } catch {
-      setErrors({ server: "B\u0142\u0105d serwera. Spr\u00F3buj ponownie." });
+      setErrors({ server: "Błąd serwera. Spróbuj ponownie." });
     } finally {
       setIsSubmitting(false);
     }
@@ -387,7 +390,12 @@ export function FlightOrderFormPage() {
   );
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">\u0141adowanie...</p>;
+    return <p className="text-body text-text-muted">Ładowanie...</p>;
+  }
+
+  if ((!isEdit && !canCreate) || (isEdit && !canEditFO)) {
+    navigate("/flight-orders");
+    return null;
   }
 
   const statusLabel = existing
@@ -403,7 +411,7 @@ export function FlightOrderFormPage() {
         className="mb-lg inline-flex items-center text-sm text-primary hover:underline"
       >
         <ChevronLeft className="h-4 w-4" />
-        {isEdit ? "Powr\u00F3t do zlecenia" : "Zlecenia na lot"}
+        {isEdit ? "Powrót do zlecenia" : "Zlecenia na lot"}
       </Link>
 
       <h1 className="mb-xl text-heading font-semibold text-primary">
@@ -449,7 +457,7 @@ export function FlightOrderFormPage() {
         <div className="mb-lg rounded-md border border-orange-300 bg-orange-50 p-md">
           <div className="mb-sm flex items-center gap-sm text-sm font-semibold text-orange-800">
             <AlertTriangle className="h-4 w-4" />
-            Ostrze\u017Cenia walidacji
+            Ostrzeżenia walidacji
           </div>
           <ul className="ml-lg list-disc space-y-xs">
             {validationWarnings.map((w, i) => (
@@ -472,27 +480,23 @@ export function FlightOrderFormPage() {
         <div className="grid grid-cols-2 gap-md">
           <div>
             <Label htmlFor="planned_start_datetime">
-              Planowane rozpocz\u0119cie *
+              Planowane rozpoczęcie *
             </Label>
-            <Input
+            <DateTimePicker
               id="planned_start_datetime"
-              type="datetime-local"
               value={plannedStartDatetime}
-              onChange={(e) => setPlannedStartDatetime(e.target.value)}
-              className="mt-xs"
+              onChange={(value) => setPlannedStartDatetime(value)}
             />
             <FieldError message={errors.planned_start_datetime} />
           </div>
           <div>
             <Label htmlFor="planned_end_datetime">
-              Planowane zako\u0144czenie *
+              Planowane zakończenie *
             </Label>
-            <Input
+            <DateTimePicker
               id="planned_end_datetime"
-              type="datetime-local"
               value={plannedEndDatetime}
-              onChange={(e) => setPlannedEndDatetime(e.target.value)}
-              className="mt-xs"
+              onChange={(value) => setPlannedEndDatetime(value)}
             />
             <FieldError message={errors.planned_end_datetime} />
           </div>
@@ -555,10 +559,10 @@ export function FlightOrderFormPage() {
 
         {/* Crew members (multi-select checkboxes) */}
         <div>
-          <Label>Dodatkowi cz\u0142onkowie za\u0142ogi</Label>
+          <Label>Dodatkowi członkowie załogi</Label>
           <div className="mt-xs max-h-[200px] overflow-auto rounded-md border border-border p-sm">
             {selectableCrewMembers.length === 0 ? (
-              <p className="text-sm text-text-muted">Brak dost\u0119pnych cz\u0142onk\u00F3w za\u0142ogi.</p>
+              <p className="text-sm text-text-muted">Brak dostępnych członków załogi.</p>
             ) : (
               selectableCrewMembers.map((cm) => (
                 <label
@@ -587,7 +591,7 @@ export function FlightOrderFormPage() {
 
         {/* Operations (multi-select checkboxes, status 3 only) */}
         <div>
-          <Label>Powi\u0105zane operacje (status: Potwierdzone do planu)</Label>
+          <Label>Powiązane operacje (status: Potwierdzone do planu)</Label>
           <div className="mt-xs max-h-[200px] overflow-auto rounded-md border border-border p-sm">
             {availableOps.length === 0 ? (
               <p className="text-sm text-text-muted">
@@ -629,20 +633,20 @@ export function FlightOrderFormPage() {
         <div className="grid grid-cols-2 gap-md rounded-md border border-border-subtle bg-surface p-md">
           <div>
             <span className="text-xs font-medium text-text-muted">
-              \u0141\u0105czna waga za\u0142ogi:
+              Łączna waga załogi:
             </span>
             <span className="ml-sm text-sm font-medium text-text">
-              {crewTotalWeight != null ? `${crewTotalWeight} kg` : "\u2014"}
+              {crewTotalWeight != null ? `${crewTotalWeight} kg` : "—"}
             </span>
           </div>
           <div>
             <span className="text-xs font-medium text-text-muted">
-              Szacowana d\u0142ugo\u015B\u0107 trasy:
+              Szacowana długość trasy:
             </span>
             <span className="ml-sm text-sm font-medium text-text">
               {estimatedRouteLength != null
                 ? `${estimatedRouteLength.toFixed(2)} km`
-                : "\u2014"}
+                : "—"}
             </span>
           </div>
         </div>
@@ -650,7 +654,7 @@ export function FlightOrderFormPage() {
         {/* Map preview */}
         {(selectedStartAirfield || selectedEndAirfield || selectedOperations.length > 0) && (
           <div>
-            <Label>Podgl\u0105d trasy</Label>
+            <Label>Podgląd trasy</Label>
             <div className="mt-xs">
               <FormMap
                 startAirfield={selectedStartAirfield}
@@ -671,11 +675,11 @@ export function FlightOrderFormPage() {
               ? "Zapisywanie..."
               : isEdit
                 ? "Zapisz zmiany"
-                : "Utw\u00F3rz zlecenie"}
+                : "Utwórz zlecenie"}
           </Button>
           {validationWarnings.length > 0 && (
             <p className="mt-sm text-center text-xs text-orange-700">
-              Zapis zablokowany - popraw ostrze\u017Cenia walidacji powy\u017Cej.
+              Zapis zablokowany - popraw ostrzeżenia walidacji powyżej.
             </p>
           )}
         </div>

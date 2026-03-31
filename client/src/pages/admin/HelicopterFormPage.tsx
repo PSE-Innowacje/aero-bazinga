@@ -15,6 +15,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -22,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 
 const helicopterSchema = z
   .object({
@@ -69,6 +72,13 @@ export function HelicopterFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
+  const { user, permissions } = useAuth();
+  const canEdit = permissions?.administracja === PermissionLevel.CRUD;
+
+  if (!canEdit) {
+    navigate("/admin/helicopters");
+    return null;
+  }
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(isEdit);
@@ -324,7 +334,7 @@ export function HelicopterFormPage() {
                 <FormItem>
                   <FormLabel>Data przeglądu</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <DatePicker value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
                   <FormDescription>
                     Wymagana dla aktywnych helikopterów

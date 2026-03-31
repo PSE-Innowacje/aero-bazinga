@@ -3,8 +3,10 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronLeft, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
+import { PermissionLevel } from "shared/permissions";
 import type { PlannedOperation, OperationTypeRow } from "shared/types";
 import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
@@ -13,7 +15,7 @@ import { UserRole } from "shared/roles";
 function Textarea({ ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
       {...props}
     />
   );
@@ -41,10 +43,11 @@ export function OperationFormPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = Boolean(id);
-  const { user } = useAuth();
+  const { user, permissions } = useAuth();
 
-  const isSupervisor = user?.role === UserRole.SUPERVISOR;
+  const isSupervisor = user?.role === UserRole.SUPERVISOR || user?.role === UserRole.SUPERADMIN;
   const isPlanner = user?.role === UserRole.PLANNER;
+  const canWrite = permissions?.planowanie_operacji === PermissionLevel.CRUD;
 
   const [isLoading, setIsLoading] = useState(isEdit);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -225,6 +228,11 @@ export function OperationFormPage() {
     return <p className="text-body text-text-muted">Ładowanie...</p>;
   }
 
+  if (!canWrite) {
+    navigate("/operations");
+    return null;
+  }
+
   const statusLabel = existing
     ? OPERATION_STATUS_LABELS_PL[existing.status as keyof typeof OPERATION_STATUS_LABELS_PL] ?? String(existing.status)
     : null;
@@ -334,22 +342,18 @@ export function OperationFormPage() {
         <div className="grid grid-cols-2 gap-md">
           <div>
             <Label htmlFor="proposed_earliest_date">Proponowana data najwcześniejsza</Label>
-            <Input
+            <DatePicker
               id="proposed_earliest_date"
-              type="date"
               value={proposedEarliestDate}
-              onChange={(e) => setProposedEarliestDate(e.target.value)}
-              className="mt-xs"
+              onChange={(value) => setProposedEarliestDate(value)}
             />
           </div>
           <div>
             <Label htmlFor="proposed_latest_date">Proponowana data najpóźniejsza</Label>
-            <Input
+            <DatePicker
               id="proposed_latest_date"
-              type="date"
               value={proposedLatestDate}
-              onChange={(e) => setProposedLatestDate(e.target.value)}
-              className="mt-xs"
+              onChange={(value) => setProposedLatestDate(value)}
             />
           </div>
         </div>
@@ -359,23 +363,19 @@ export function OperationFormPage() {
           <div className="grid grid-cols-2 gap-md">
             <div>
               <Label htmlFor="planned_earliest_date">Planowana data najwcześniejsza</Label>
-              <Input
+              <DatePicker
                 id="planned_earliest_date"
-                type="date"
                 value={plannedEarliestDate}
-                onChange={(e) => setPlannedEarliestDate(e.target.value)}
-                className="mt-xs"
+                onChange={(value) => setPlannedEarliestDate(value)}
               />
               <FieldError message={errors.planned_earliest_date} />
             </div>
             <div>
               <Label htmlFor="planned_latest_date">Planowana data najpóźniejsza</Label>
-              <Input
+              <DatePicker
                 id="planned_latest_date"
-                type="date"
                 value={plannedLatestDate}
-                onChange={(e) => setPlannedLatestDate(e.target.value)}
-                className="mt-xs"
+                onChange={(value) => setPlannedLatestDate(value)}
               />
               <FieldError message={errors.planned_latest_date} />
             </div>

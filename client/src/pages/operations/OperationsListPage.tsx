@@ -73,7 +73,7 @@ export function OperationsListPage() {
   const [error, setError] = useState<string | null>(null);
 
   const canCreate =
-    user?.role === UserRole.PLANNER || user?.role === UserRole.SUPERVISOR;
+    user?.role === UserRole.PLANNER || user?.role === UserRole.SUPERVISOR || user?.role === UserRole.SUPERADMIN;
 
   useEffect(() => {
     setIsLoading(true);

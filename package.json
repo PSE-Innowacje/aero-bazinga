@@ -9,7 +9,9 @@
   "scripts": {
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
-    "seed": "npm run seed -w server"
+    "seed": "npm run seed -w server",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "engines": {
     "node": ">=18"
@@ -17,5 +19,8 @@
   "dependencies": {
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.2"
   }
 }

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { PERMISSIONS, PermissionLevel, MenuSection } from "shared/permissions";
+import { PermissionLevel } from "shared/permissions";
+import type { MenuSection } from "shared/permissions";
 import { UserRole } from "shared/roles";
+import { getPermissionLevel } from "../db/permissions-cache.js";
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.session.userId) {
@@ -34,8 +36,8 @@ export function requirePermission(section: MenuSection, minLevel: PermissionLeve
         .status(401)
         .json({ error: "unauthorized", message: "Wymagane zalogowanie" });
     }
-    const role = req.session.role as UserRole;
-    const level = PERMISSIONS[role]?.[section];
+    const role = req.session.role as string;
+    const level = getPermissionLevel(role, section);
     if (!level || level === PermissionLevel.NONE) {
       return res
         .status(403)
