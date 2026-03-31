@@ -52,7 +52,7 @@ function StatusBadge({ status }: { status: number }) {
 }
 
 const STATUS_OPTIONS = [
-  { value: "", label: "Wszystkie" },
+  { value: "all", label: "Wszystkie" },
   { value: "1", label: "Wprowadzone" },
   { value: "2", label: "Odrzucone" },
   { value: "3", label: "Potwierdzone do planu" },
@@ -79,7 +79,7 @@ export function OperationsListPage() {
     setIsLoading(true);
     setError(null);
 
-    const url = statusFilter
+    const url = statusFilter && statusFilter !== "all"
       ? `/api/operations?status=${statusFilter}`
       : "/api/operations";
 

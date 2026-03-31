@@ -9,8 +9,10 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  LogOut,
   Menu,
 } from "lucide-react";
+import { ROLE_DISPLAY_PL } from "shared/roles";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS, PermissionLevel, MenuSection } from "shared/permissions";
@@ -70,7 +72,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   // Determine default collapsed state based on window width
@@ -178,6 +180,61 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             </div>
           ))}
         </nav>
+
+        {/* User profile + logout */}
+        <div className="border-t border-border-subtle px-md py-sm">
+          {!collapsed && user && (
+            <div className="mb-sm">
+              <p className="text-sm font-semibold text-text truncate">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-text-muted truncate">
+                {ROLE_DISPLAY_PL[user.role]}
+              </p>
+            </div>
+          )}
+          {collapsed && user && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="mb-sm flex h-10 w-full items-center justify-center">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
+                    {user.firstName[0]}{user.lastName[0]}
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{user.firstName} {user.lastName}</p>
+                <p className="text-xs text-muted-foreground">{ROLE_DISPLAY_PL[user.role]}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+
+          {/* Logout button */}
+          {!collapsed ? (
+            <button
+              onClick={logout}
+              className="flex h-9 w-full items-center gap-sm rounded-md px-sm text-sm text-accent transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <LogOut className="h-4 w-4 shrink-0" />
+              <span>Wyloguj się</span>
+            </button>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={logout}
+                  className="flex h-10 w-full items-center justify-center rounded-md text-accent transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label="Wyloguj się"
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Wyloguj się</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
 
         {/* Collapse toggle */}
         <div className="border-t border-border-subtle p-sm">

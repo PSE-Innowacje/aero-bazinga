@@ -26,7 +26,7 @@ export const PERMISSIONS: Record<UserRole, Record<MenuSection, PermissionLevel>>
     zlecenia_na_lot: PermissionLevel.EDIT_VIEW,
   },
   [UserRole.PILOT]: {
-    administracja: PermissionLevel.READ,
+    administracja: PermissionLevel.NONE,
     planowanie_operacji: PermissionLevel.READ,
     zlecenia_na_lot: PermissionLevel.CRUD,
   },
