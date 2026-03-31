@@ -22,18 +22,18 @@ Decimal phases appear between their surrounding integers in numeric order.
 ### Phase 1: Foundation
 **Goal**: The application has a working project structure, database schema, and login flow — all four roles can authenticate and reach their respective areas
 **Depends on**: Nothing (first phase)
-**Requirements**: AUTH-01, AUTH-02, AUTH-03
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04
 **Success Criteria** (what must be TRUE):
   1. User can log in with email and password and is redirected to the correct area for their role
   2. User stays logged in after browser refresh without re-entering credentials
   3. A user with the wrong role cannot access a protected section (e.g. Pilot cannot reach the admin panel)
   4. The database schema exists with all tables and relationships needed for the full application
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Project scaffolding — React frontend, Node.js/Express backend, PostgreSQL setup, shared dev tooling
-- [ ] 01-02: Database schema — all tables, constraints, FK relationships, seed data (roles, status dictionaries)
-- [ ] 01-03: Authentication — login endpoint, JWT/session, role-based route guards, role-aware navigation shell
+- [ ] 01-01-PLAN.md — Scaffold monorepo (React + Vite + Tailwind + shadcn/ui, Express, shared types/enums/permissions)
+- [ ] 01-02-PLAN.md — Complete database schema (all tables for Phases 1-4), connection pool, migration runner, seed script
+- [ ] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
 **UI hint**: yes
 
 ### Phase 2: Admin Panel
@@ -61,7 +61,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Planner can create an operation with auto-assigned number, KML upload, and all required fields; route distance is calculated and displayed automatically
   2. KML route points are displayed on an interactive map within the operation view
-  3. Supervisor can confirm (status 1 → 3) or reject (1 → 2) an operation; planner can cancel (1, 3, 4 → 7) their own operation
+  3. Supervisor can confirm (status 1 -> 3) or reject (1 -> 2) an operation; planner can cancel (1, 3, 4 -> 7) their own operation
   4. Role-based field restrictions are enforced: planner cannot edit planned dates, status, or auto-calculated fields in any status; supervisor has full access
   5. Every field change is captured in the history log with old value, new value, timestamp, and user
   6. Operation list shows correct columns, defaults to status 3 filter, and sorts by planned earliest date ascending
@@ -81,21 +81,21 @@ Plans:
   1. Pilot can create a flight order with auto-filled pilot field, selected helicopter, crew members, airfields, and linked confirmed operations (status 3 only)
   2. Crew total weight and estimated route length are auto-calculated; save is blocked with specific warnings if any of the 5 validation rules are violated
   3. Map displays start airfield marker, all KML route points from selected operations, and end airfield marker
-  4. Supervisor can accept (2 → 4) or reject (2 → 3) a submitted flight order
+  4. Supervisor can accept (2 -> 4) or reject (2 -> 3) a submitted flight order
   5. When operations are added to a flight order their status changes from 3 to 4; when the pilot reports completion the linked operations receive the correct cascaded status
   6. Flight order list shows correct columns, defaults to status 2 filter, and sorts by planned start datetime ascending
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3→4 transition on link
-- [ ] 04-02: Flight orders workflow — submit (1→2), supervisor accept/reject (2→4 or 2→3), completion reporting (4→5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
+- [ ] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3->4 transition on link
+- [ ] 04-02: Flight orders workflow — submit (1->2), supervisor accept/reject (2->4 or 2->3), completion reporting (4->5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
 - [ ] 04-03: Flight orders UI — order form with map display (start + operation routes + end), list view with filtering/sorting, status action buttons per role
 **UI hint**: yes
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
