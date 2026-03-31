@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
 - [x] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
-- [ ] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history
+- [x] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history (completed 2026-03-31)
 - [ ] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade
 
 ## Phase Details
@@ -68,9 +68,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: Operations core — DB layer, KML upload and parsing, Haversine distance calculation, create/edit API with auto-number and role restrictions
-- [ ] 03-02: Operations workflow — status transitions (planner cancel, supervisor confirm/reject, OPS-09 auto-transitions), history log, comments API
-- [ ] 03-03: Operations UI — operation form with map display (Leaflet), list view with filtering/sorting, status action buttons per role
+- [x] 03-01: Operations core — DB layer, KML upload and parsing, Haversine distance calculation, create/edit API with auto-number and role restrictions
+- [x] 03-02: Operations workflow — status transitions (planner cancel, supervisor confirm/reject, OPS-09 auto-transitions), history log, comments API
+- [x] 03-03: Operations UI — operation form with map display (Leaflet), list view with filtering/sorting, status action buttons per role
 **UI hint**: yes
 
 ### Phase 4: Flight Orders
@@ -101,5 +101,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete | 2026-03-31 |
 | 2. Admin Panel | 3/3 | Complete | 2026-03-31 |
-| 3. Planned Operations | 0/3 | Not started | - |
+| 3. Planned Operations | 3/3 | Complete   | 2026-03-31 |
 | 4. Flight Orders | 0/3 | Not started | - |

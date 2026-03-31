@@ -39,20 +39,20 @@
 
 ### Planned Operations
 
-- [ ] **OPS-01**: Planner can create a planned operation with: auto-assigned operation number, project reference number (max 30), short description (max 100), KML route file (1 file, max 5000 points, Poland territory), proposed earliest date (optional), proposed latest date (optional), operation types (multi-select from dictionary, min 1), additional info/priority notes (max 500, optional), contact persons (set of emails, optional), created_by (auto-set to current user's email, immutable)
-- [ ] **OPS-02**: Route distance in km is automatically calculated from the KML file as the sum of Haversine distances between consecutive points
-- [ ] **OPS-03**: KML route points are displayed on an interactive map within the operation form/view
-- [ ] **OPS-04**: Operation has a 7-state status workflow: 1-Wprowadzone, 2-Odrzucone, 3-Potwierdzone do planu, 4-Zaplanowane do zlecenia, 5-Częściowo zrealizowane, 6-Zrealizowane, 7-Rezygnacja
-- [ ] **OPS-05**: Planner can edit operations in statuses 1, 2, 3, 4, 5; planner cannot edit: auto-calculated fields, planned dates, status, post-completion notes, created_by
-- [ ] **OPS-06**: Supervisor can edit operations in all statuses (full field access)
-- [ ] **OPS-06b**: Post-completion notes (max 500 chars) are editable only when operation status ≥ 5 (Częściowo zrealizowane or Zrealizowane); editable by supervisor in all eligible statuses, not editable by planner
-- [ ] **OPS-06c**: Operation detail view shows a list of all flight orders this operation has been linked to (read-only, auto-populated via the many-to-many relationship)
-- [ ] **OPS-07**: Supervisor sees Reject (1→2) and Confirm (1→3, requires planned dates filled) action buttons when status = 1
-- [ ] **OPS-08**: Planner sees Cancel (1,3,4 → 7) action button when status is 1, 3, or 4
-- [ ] **OPS-09**: Status auto-transitions: 3→4 when operation is selected for a flight order; 4→5, 4→6, or 4→3 when pilot reports flight completion — all transitions that affect multiple records (link + cascade) execute in a single atomic DB transaction
-- [ ] **OPS-10**: Every field change is recorded in history log: old value, new value, timestamp, user
-- [ ] **OPS-11**: Multiple comments can be appended to an operation (comment text up to 500 chars each, stored as ordered list with timestamp and author user)
-- [ ] **OPS-12**: Operation list shows: operation number, project ref, operation types, proposed earliest date, proposed latest date, planned earliest date, planned latest date, status; filterable (default filter: status 3); sorted by planned earliest date ascending
+- [x] **OPS-01**: Planner can create a planned operation with: auto-assigned operation number, project reference number (max 30), short description (max 100), KML route file (1 file, max 5000 points, Poland territory), proposed earliest date (optional), proposed latest date (optional), operation types (multi-select from dictionary, min 1), additional info/priority notes (max 500, optional), contact persons (set of emails, optional), created_by (auto-set to current user's email, immutable)
+- [x] **OPS-02**: Route distance in km is automatically calculated from the KML file as the sum of Haversine distances between consecutive points
+- [x] **OPS-03**: KML route points are displayed on an interactive map within the operation form/view
+- [x] **OPS-04**: Operation has a 7-state status workflow: 1-Wprowadzone, 2-Odrzucone, 3-Potwierdzone do planu, 4-Zaplanowane do zlecenia, 5-Częściowo zrealizowane, 6-Zrealizowane, 7-Rezygnacja
+- [x] **OPS-05**: Planner can edit operations in statuses 1, 2, 3, 4, 5; planner cannot edit: auto-calculated fields, planned dates, status, post-completion notes, created_by
+- [x] **OPS-06**: Supervisor can edit operations in all statuses (full field access)
+- [x] **OPS-06b**: Post-completion notes (max 500 chars) are editable only when operation status ≥ 5 (Częściowo zrealizowane or Zrealizowane); editable by supervisor in all eligible statuses, not editable by planner
+- [x] **OPS-06c**: Operation detail view shows a list of all flight orders this operation has been linked to (read-only, auto-populated via the many-to-many relationship)
+- [x] **OPS-07**: Supervisor sees Reject (1→2) and Confirm (1→3, requires planned dates filled) action buttons when status = 1
+- [x] **OPS-08**: Planner sees Cancel (1,3,4 → 7) action button when status is 1, 3, or 4
+- [x] **OPS-09**: Status auto-transitions: 3→4 when operation is selected for a flight order; 4→5, 4→6, or 4→3 when pilot reports flight completion — all transitions that affect multiple records (link + cascade) execute in a single atomic DB transaction
+- [x] **OPS-10**: Every field change is recorded in history log: old value, new value, timestamp, user
+- [x] **OPS-11**: Multiple comments can be appended to an operation (comment text up to 500 chars each, stored as ordered list with timestamp and author user)
+- [x] **OPS-12**: Operation list shows: operation number, project ref, operation types, proposed earliest date, proposed latest date, planned earliest date, planned latest date, status; filterable (default filter: status 3); sorted by planned earliest date ascending
 
 ### Flight Orders
 
@@ -119,20 +119,20 @@
 | USR-01 | Phase 2 | Complete |
 | USR-02 | Phase 2 | Complete |
 | USR-03 | Phase 2 | Complete |
-| OPS-01 | Phase 3 | Pending |
-| OPS-02 | Phase 3 | Pending |
-| OPS-03 | Phase 3 | Pending |
-| OPS-04 | Phase 3 | Pending |
-| OPS-05 | Phase 3 | Pending |
-| OPS-06 | Phase 3 | Pending |
-| OPS-06b | Phase 3 | Pending |
-| OPS-06c | Phase 3 | Pending |
-| OPS-07 | Phase 3 | Pending |
-| OPS-08 | Phase 3 | Pending |
-| OPS-09 | Phase 3 | Pending |
-| OPS-10 | Phase 3 | Pending |
-| OPS-11 | Phase 3 | Pending |
-| OPS-12 | Phase 3 | Pending |
+| OPS-01 | Phase 3 | Complete |
+| OPS-02 | Phase 3 | Complete |
+| OPS-03 | Phase 3 | Complete |
+| OPS-04 | Phase 3 | Complete |
+| OPS-05 | Phase 3 | Complete |
+| OPS-06 | Phase 3 | Complete |
+| OPS-06b | Phase 3 | Complete |
+| OPS-06c | Phase 3 | Complete |
+| OPS-07 | Phase 3 | Complete |
+| OPS-08 | Phase 3 | Complete |
+| OPS-09 | Phase 3 | Complete |
+| OPS-10 | Phase 3 | Complete |
+| OPS-11 | Phase 3 | Complete |
+| OPS-12 | Phase 3 | Complete |
 | FLT-01 | Phase 4 | Pending |
 | FLT-02 | Phase 4 | Pending |
 | FLT-03 | Phase 4 | Pending |
