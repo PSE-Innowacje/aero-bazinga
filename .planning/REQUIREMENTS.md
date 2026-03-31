@@ -9,7 +9,7 @@
 
 - [ ] **AUTH-01**: User can log in with email and password
 - [ ] **AUTH-02**: User session persists across browser refresh (stays logged in)
-- [ ] **AUTH-03**: Access to menu sections and data is restricted by role per permissions matrix — enforced on both frontend (hidden sections) and backend (middleware per endpoint); `NONE` = hidden + 403, `READ` = GET only, `CRUD` = full access
+- [ ] **AUTH-03**: Access to menu sections and data is restricted by role per permissions matrix — enforced on both frontend (hidden sections) and backend (middleware per endpoint); `NONE` = hidden + 403, `READ` = GET only, `CRUD` = full access; Osoba nadzorująca on Zlecenia na lot = edit + view only (no create)
 - [ ] **AUTH-04**: A user with role Pilot must be linked 1:1 to a crew member record; the system enforces this link at user creation and uses the crew member record for weight, license, and training data in flight orders
 
 ### Helicopters
@@ -56,7 +56,7 @@
 
 ### Flight Orders
 
-- [ ] **FLT-01**: Pilot can create a flight order with: auto-assigned order number, planned start datetime, planned end datetime, pilot (auto-filled from the crew member record linked to the current logged-in Pilot user), helicopter (active only), crew members (multi-select, optional), start airfield, end airfield, selected planned operations (multi-select, status 3 only, sorted by planned earliest date)
+- [ ] **FLT-01**: Only Pilot can create a flight order (Osoba nadzorująca has edit/view only on Zlecenia); Pilot creates a flight order with: auto-assigned order number, planned start datetime, planned end datetime, pilot (auto-filled from the crew member record linked to the current logged-in Pilot user), helicopter (active only), crew members (multi-select, optional), start airfield, end airfield, selected planned operations (multi-select, status 3 only, sorted by planned earliest date)
 - [ ] **FLT-02**: Crew total weight is auto-calculated: sum of pilot weight + all selected crew member weights
 - [ ] **FLT-03**: Estimated route length is auto-calculated: sum of km from all selected operations
 - [ ] **FLT-04**: Map displays: start airfield marker, all KML route points from selected operations, end airfield marker
