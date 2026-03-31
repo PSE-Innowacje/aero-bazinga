@@ -6,6 +6,7 @@ import { sessionMiddleware } from "./middleware/session.js";
 import { requireAuth, requirePermission } from "./middleware/rbac.js";
 import { authRouter } from "./routes/auth.js";
 import { helicoptersRouter } from "./routes/helicopters.js";
+import { crewRouter } from "./routes/crew.js";
 import { PermissionLevel } from "shared/permissions";
 
 const app = express();
@@ -39,6 +40,7 @@ app.use(
 
 // Admin CRUD routers (Phase 2)
 app.use("/api/admin/helicopters", helicoptersRouter);
+app.use("/api/admin/crew", crewRouter);
 app.use(
   "/api/operations",
   requireAuth,
