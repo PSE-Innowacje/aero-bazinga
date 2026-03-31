@@ -1,0 +1,17 @@
+{
+  "name": "aero",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "scripts": {
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "seed": "npm run seed -w server"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
