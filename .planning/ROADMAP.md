@@ -31,8 +31,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Scaffold monorepo (React + Vite + Tailwind + shadcn/ui, Express, shared types/enums/permissions)
-- [ ] 01-02-PLAN.md — Complete database schema (all tables for Phases 1-4), connection pool, migration runner, seed script
+- [x] 01-01-PLAN.md — Scaffold monorepo (React + Vite + Tailwind + shadcn/ui, Express, shared types/enums/permissions)
+- [x] 01-02-PLAN.md — Complete database schema (all tables for Phases 1-4), connection pool, migration runner, seed script
 - [ ] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
 **UI hint**: yes
 
@@ -99,7 +99,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 2/3 | In Progress|  |
 | 2. Admin Panel | 0/3 | Not started | - |
 | 3. Planned Operations | 0/3 | Not started | - |
 | 4. Flight Orders | 0/3 | Not started | - |
