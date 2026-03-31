@@ -10,7 +10,13 @@ import {
   ChevronRight,
   LogOut,
   LayoutDashboard,
+  MoreVertical,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 function HelicopterIcon({ className }: { className?: string }) {
   return (
@@ -126,8 +132,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const sidebarContent = (
     <TooltipProvider delayDuration={300}>
       <div className="flex h-full flex-col">
-        {/* Sidebar header — matches TopBar height */}
-        <div className="flex h-14 items-center border-b border-border-subtle px-md">
+        {/* Sidebar header */}
+        <div className="flex h-14 items-center border-b border-border-subtle px-md gap-sm">
+          <img src="/favicon.svg" alt="AERO" className="h-7 w-7 shrink-0" />
           {!collapsed && (
             <span className="text-heading font-semibold text-primary">AERO</span>
           )}
@@ -252,59 +259,58 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           ))}
         </nav>
 
-        {/* User profile + logout */}
-        <div className="border-t border-border-subtle px-md py-sm">
-          {!collapsed && user && (
-            <div className="mb-sm">
-              <p className="text-sm font-semibold text-text truncate">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-xs text-text-muted truncate">
-                {ROLE_DISPLAY_PL[user.role]}
-              </p>
-            </div>
-          )}
-          {collapsed && user && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="mb-sm flex h-10 w-full items-center justify-center">
+        {/* User profile with context menu */}
+        <div className="border-t border-border-subtle px-sm py-sm">
+          <Popover>
+            <PopoverTrigger asChild>
+              {!collapsed ? (
+                <button className="flex w-full items-center gap-sm rounded-md px-sm py-sm transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
+                    {user.firstName[0]}{user.lastName[0]}
+                  </div>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="text-sm font-semibold text-text truncate">
+                      {user.firstName} {user.lastName}
+                    </p>
+                    <p className="text-xs text-text-muted truncate">
+                      {ROLE_DISPLAY_PL[user.role]}
+                    </p>
+                  </div>
+                  <MoreVertical className="h-4 w-4 shrink-0 text-text-muted" />
+                </button>
+              ) : (
+                <button className="flex h-10 w-full items-center justify-center rounded-md transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
                     {user.firstName[0]}{user.lastName[0]}
                   </div>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-muted-foreground">{ROLE_DISPLAY_PL[user.role]}</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-
-          {/* Logout button */}
-          {!collapsed ? (
-            <button
-              onClick={logout}
-              className="flex h-9 w-full items-center gap-sm rounded-md px-sm text-sm text-accent transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                </button>
+              )}
+            </PopoverTrigger>
+            <PopoverContent
+              side={collapsed ? "right" : "top"}
+              align="start"
+              className="w-56 p-0"
             >
-              <LogOut className="h-4 w-4 shrink-0" />
-              <span>Wyloguj się</span>
-            </button>
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
+              <div className="border-b border-border px-md py-sm">
+                <p className="text-sm font-semibold text-text">
+                  {user.firstName} {user.lastName}
+                </p>
+                <p className="text-xs text-text-muted">{user.email}</p>
+                <p className="mt-xs text-xs text-text-muted">
+                  {ROLE_DISPLAY_PL[user.role]}
+                </p>
+              </div>
+              <div className="p-xs">
                 <button
                   onClick={logout}
-                  className="flex h-10 w-full items-center justify-center rounded-md text-accent transition-colors hover:bg-border-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  aria-label="Wyloguj się"
+                  className="flex h-9 w-full items-center gap-sm rounded-md px-sm text-sm text-accent transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <LogOut className="h-5 w-5" />
+                  <LogOut className="h-4 w-4" />
+                  Wyloguj się
                 </button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Wyloguj się</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* Collapse toggle */}

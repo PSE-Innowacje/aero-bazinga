@@ -11,7 +11,9 @@
     "dev:server": "npm run dev -w server",
     "seed": "npm run seed -w server",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui"
   },
   "engines": {
     "node": ">=18"
@@ -21,6 +23,7 @@
     "@types/react-dom": "^18.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "vitest": "^4.1.2"
   }
 }
