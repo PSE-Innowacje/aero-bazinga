@@ -15,6 +15,9 @@ import { AirfieldsPage } from "@/pages/admin/AirfieldsPage";
 import { AirfieldFormPage } from "@/pages/admin/AirfieldFormPage";
 import { UsersPage } from "@/pages/admin/UsersPage";
 import { UserFormPage } from "@/pages/admin/UserFormPage";
+import { OperationsListPage } from "@/pages/operations/OperationsListPage";
+import { OperationFormPage } from "@/pages/operations/OperationFormPage";
+import { OperationDetailPage } from "@/pages/operations/OperationDetailPage";
 
 // Placeholder page for sections not yet implemented
 function PlaceholderPage({ title }: { title: string }) {
@@ -92,7 +95,12 @@ export default function App() {
             element={
               <ProtectedRoute section="planowanie_operacji">
                 <AppShell>
-                  <PlaceholderPage title="Planowanie operacji" />
+                  <Routes>
+                    <Route path="" element={<OperationsListPage />} />
+                    <Route path="new" element={<OperationFormPage />} />
+                    <Route path=":id" element={<OperationDetailPage />} />
+                    <Route path=":id/edit" element={<OperationFormPage />} />
+                  </Routes>
                 </AppShell>
               </ProtectedRoute>
             }
