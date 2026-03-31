@@ -78,6 +78,10 @@ A planner can submit a planned operation with a KML route, and a supervisor can 
 | React + Node.js/Express + PostgreSQL | User-specified stack, well-suited for CRUD-heavy app with complex data relationships | — Pending |
 | KML file parsing server-side | Keeps frontend lightweight; allows validation and km calculation before storage | — Pending |
 | Leaflet.js for maps | Open-source, works offline/locally, handles KML overlays well | — Pending |
+| Pilot = users record (login) linked 1:1 to crew_members record (operational data) | PRD selects pilot from crew_members; app requires login; confirmed by user — a Pilot user has both a user account and a crew member record; flight orders reference the crew_members record auto-filled from current session | — Pending |
+| Backend RBAC middleware enforced per endpoint | Checklist requirement — frontend hiding alone is insufficient; all role checks duplicated on backend | — Pending |
+| Status fields stored as integers (enum), not strings | Ensures strict FSM enforcement and prevents invalid state values | — Pending |
+| Cascade operations (link + completion reporting) use atomic DB transactions | Prevents partial failures from corrupting status consistency across operations and flight orders | — Pending |
 
 ## Evolution
 
@@ -97,4 +101,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-31 after initialization*
+*Last updated: 2026-03-31 after implementation checklist review*
