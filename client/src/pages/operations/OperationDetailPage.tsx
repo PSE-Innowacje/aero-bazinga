@@ -32,6 +32,52 @@ function fieldLabelPL(field: string): string {
   return FIELD_LABELS_PL[field] ?? field;
 }
 
+/**
+ * Format a history value for human display.
+ * Handles legacy JS Date.toString() values, file paths, raw numbers, etc.
+ */
+function formatHistoryValue(field: string, value: string | null): string {
+  if (value == null || value === "") return "—";
+
+  // Dates: detect legacy "Mon Jan 01 2026 00:00:00 GMT..." and convert
+  if (field.includes("date")) {
+    // Legacy JS Date.toString() format
+    if (value.includes("GMT") || value.includes("T00:00:00")) {
+      try {
+        const d = new Date(value);
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString("pl-PL");
+        }
+      } catch { /* fall through */ }
+    }
+    // Already yyyy-MM-dd format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [y, m, d] = value.split("-");
+      return `${d}.${m}.${y}`;
+    }
+    return value;
+  }
+
+  // KML file path — don't show filesystem paths
+  if (field === "kml_file_path") {
+    if (value === "previous file") return "Poprzedni plik";
+    if (value === "updated file") return "Zaktualizowany plik";
+    if (value.includes("/")) return "Plik KML";
+    return value;
+  }
+
+  // Route distance — append unit
+  if (field === "route_distance_km") {
+    const num = parseFloat(value);
+    if (!isNaN(num)) return `${num.toFixed(2)} km`;
+    return value;
+  }
+
+  // Status — already stored as Polish labels, pass through
+  // Everything else — pass through
+  return value;
+}
+
 function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "—";
   return dateStr.substring(0, 10);
@@ -494,8 +540,8 @@ export function OperationDetailPage() {
                       <td className="py-xs pr-md text-xs text-text-muted">{formatDateTime(h.changed_at)}</td>
                       <td className="py-xs pr-md text-xs">{h.user_email}</td>
                       <td className="py-xs pr-md text-xs font-medium">{fieldLabelPL(h.field_name)}</td>
-                      <td className="py-xs pr-md text-xs text-text-muted">{h.old_value ?? "—"}</td>
-                      <td className="py-xs text-xs">{h.new_value ?? "—"}</td>
+                      <td className="py-xs pr-md text-xs text-text-muted">{formatHistoryValue(h.field_name, h.old_value)}</td>
+                      <td className="py-xs text-xs">{formatHistoryValue(h.field_name, h.new_value)}</td>
                     </tr>
                   ))}
                 </tbody>
