@@ -12,10 +12,10 @@ import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
 
 // Textarea component (not in shadcn set, using plain HTML styled)
-function Textarea({ ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+      className={`min-h-[120px] w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-text placeholder:text-secondary focus-visible:outline-none focus-visible:border-2 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 resize-y ${className ?? ""}`}
       {...props}
     />
   );
@@ -238,7 +238,7 @@ export function OperationFormPage() {
     : null;
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <Link
         to={isEdit && id ? `/operations/${id}` : "/operations"}
         className="mb-lg inline-flex items-center text-sm text-primary hover:underline"
@@ -383,7 +383,7 @@ export function OperationFormPage() {
         )}
 
         {/* Additional info */}
-        <div>
+        <div style={{gridColumn: '1 / -1'}}>
           <Label htmlFor="additional_info">Dodatkowe informacje / priorytety</Label>
           <Textarea
             id="additional_info"
@@ -391,7 +391,8 @@ export function OperationFormPage() {
             onChange={(e) => setAdditionalInfo(e.target.value)}
             maxLength={500}
             placeholder="Opcjonalne uwagi, priorytety..."
-            className="mt-xs"
+            className="mt-xs w-full border border-border rounded-md"
+            style={{ minHeight: "160px" }}
           />
           <div className="mt-xs flex justify-end text-xs text-text-muted">
             {additionalInfo.length}/500
@@ -452,13 +453,32 @@ export function OperationFormPage() {
                 </button>
               </div>
             ) : (
-              <Input
-                ref={fileInputRef}
-                id="kml_file"
-                type="file"
-                accept=".kml"
-                onChange={(e) => setKmlFile(e.target.files?.[0] ?? null)}
-              />
+              <div
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("border-primary", "bg-primary/5"); }}
+                onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove("border-primary", "bg-primary/5"); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove("border-primary", "bg-primary/5");
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.name.endsWith(".kml")) {
+                    setKmlFile(file);
+                  }
+                }}
+                onClick={() => fileInputRef.current?.click()}
+                className="flex flex-col items-center justify-center gap-sm rounded-lg border-2 border-dashed border-border bg-surface px-lg py-xl cursor-pointer transition-colors hover:border-primary hover:bg-[#EBF2FA]"
+              >
+                <input
+                  ref={fileInputRef}
+                  id="kml_file"
+                  type="file"
+                  accept=".kml"
+                  onChange={(e) => setKmlFile(e.target.files?.[0] ?? null)}
+                  className="hidden"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span className="text-sm font-semibold text-primary">Przeciągnij plik KML tutaj</span>
+                <span className="text-xs text-text-muted">lub kliknij, aby wybrać z dysku</span>
+              </div>
             )}
             {isEdit && !kmlFile && (
               <p className="mt-xs text-xs text-text-muted">
