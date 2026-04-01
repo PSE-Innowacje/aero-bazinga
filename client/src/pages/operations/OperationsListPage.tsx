@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { PlannedOperation } from "shared/types";
@@ -50,6 +51,17 @@ export function OperationsListPage() {
   const [operations, setOperations] = useState<PlannedOperation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredOperations = useMemo(() => {
+    if (!search.trim()) return operations;
+    const q = search.toLowerCase();
+    return operations.filter(op =>
+      op.operation_number?.toLowerCase().includes(q) ||
+      op.project_reference?.toLowerCase().includes(q) ||
+      op.short_description?.toLowerCase().includes(q)
+    );
+  }, [operations, search]);
 
   const canCreate =
     user?.role === UserRole.PLANNER || user?.role === UserRole.SUPERVISOR || user?.role === UserRole.SUPERADMIN;
@@ -114,6 +126,10 @@ export function OperationsListPage() {
         </Select>
       </div>
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po numerze, projekcie lub opisie..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -122,13 +138,13 @@ export function OperationsListPage() {
         </div>
       )}
 
-      {!isLoading && !error && operations.length === 0 && (
+      {!isLoading && !error && filteredOperations.length === 0 && (
         <p className="text-body text-text-muted">
           Brak operacji dla wybranego filtra.
         </p>
       )}
 
-      {!isLoading && !error && operations.length > 0 && (
+      {!isLoading && !error && filteredOperations.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -144,7 +160,7 @@ export function OperationsListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {operations.map((op) => (
+              {filteredOperations.map((op) => (
                 <TableRow
                   key={op.id}
                   className="cursor-pointer hover:bg-surface"

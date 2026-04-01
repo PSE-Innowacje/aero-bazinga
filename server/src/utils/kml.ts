@@ -10,11 +10,28 @@ export interface KmlParseResult {
   error?: string;
 }
 
-// Poland bounding box (approximate)
+// Poland bounding box (tightened to reduce false positives from neighboring countries)
 const POLAND_LAT_MIN = 49.0;
-const POLAND_LAT_MAX = 54.9;
-const POLAND_LNG_MIN = 14.1;
-const POLAND_LNG_MAX = 24.2;
+const POLAND_LAT_MAX = 54.85;
+const POLAND_LNG_MIN = 14.12;
+const POLAND_LNG_MAX = 24.15;
+
+// Additional check: southwestern corner exclusion
+// Below lat 50.5, longitude must be >= 15.8 (excludes Czech/German territory)
+// Below lat 51.0, longitude must be >= 14.6
+function isInPoland(lat: number, lng: number): boolean {
+  // Basic bounding box
+  if (lat < POLAND_LAT_MIN || lat > POLAND_LAT_MAX || lng < POLAND_LNG_MIN || lng > POLAND_LNG_MAX) {
+    return false;
+  }
+  // SW corner: Czech Republic exclusion
+  if (lat < 50.0 && lng < 16.0) return false;
+  if (lat < 50.5 && lng < 15.0) return false;
+  if (lat < 51.0 && lng < 14.6) return false;
+  // SE corner: Ukraine/Slovakia exclusion
+  if (lat < 49.5 && lng > 22.5) return false;
+  return true;
+}
 
 const MAX_POINTS = 5000;
 const MIN_POINTS = 2;
@@ -109,14 +126,9 @@ export function parseKml(xmlString: string): KmlParseResult {
     };
   }
 
-  // Validate all points within Poland bounding box
+  // Validate all points within Poland borders
   for (const pt of points) {
-    if (
-      pt.lat < POLAND_LAT_MIN ||
-      pt.lat > POLAND_LAT_MAX ||
-      pt.lng < POLAND_LNG_MIN ||
-      pt.lng > POLAND_LNG_MAX
-    ) {
+    if (!isInPoland(pt.lat, pt.lng)) {
       return {
         points: [],
         error: `Punkt trasy (${pt.lat.toFixed(4)}, ${pt.lng.toFixed(4)}) leży poza terytorium Polski.`,

@@ -53,6 +53,14 @@ describe("parseKml", () => {
     expect(result.points).toHaveLength(0);
   });
 
+  it("rejects points in Czech Republic (SW corner exclusion)", () => {
+    // Třebíč, Czech Republic — lat 49.12, lng 15.07
+    const kml = validKml("15.07,49.12,0 15.08,49.13,0");
+    const result = parseKml(kml);
+    expect(result.error).toContain("poza terytorium Polski");
+    expect(result.points).toHaveLength(0);
+  });
+
   it("rejects KML with only 1 point", () => {
     const kml = validKml("21.0122,52.2297,0");
     const result = parseKml(kml);

@@ -119,17 +119,10 @@ export function PermissionsPage() {
 
   return (
     <div>
-      <div className="mb-lg flex items-center justify-between">
+      <div className="mb-lg">
         <h1 className="text-heading font-semibold text-primary">
           Użytkownicy systemu
         </h1>
-        <Button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="bg-primary text-white hover:bg-primary-hover"
-        >
-          {isSaving ? "Zapisywanie..." : "Zapisz zmiany"}
-        </Button>
       </div>
 
       {/* Tabs */}
@@ -213,10 +206,18 @@ export function PermissionsPage() {
         </Table>
       </div>
 
-      <p className="mt-md text-xs text-text-muted">
-        Uwaga: zmiany uprawnień będą widoczne po ponownym zalogowaniu
-        użytkowników z daną rolą.
-      </p>
+      <div className="mt-lg flex items-center justify-between">
+        <p className="text-xs text-text-muted">
+          Uwaga: zmiany uprawnień będą widoczne po ponownym zalogowaniu użytkowników z daną rolą.
+        </p>
+        <Button
+          onClick={handleSave}
+          disabled={isSaving}
+          className="bg-primary text-white hover:bg-primary-hover"
+        >
+          {isSaving ? "Zapisywanie..." : "Zapisz zmiany"}
+        </Button>
+      </div>
     </div>
   );
 }
