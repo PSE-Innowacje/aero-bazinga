@@ -267,6 +267,8 @@ operationsRouter.post(
       operation_type_ids,
       proposed_earliest_date,
       proposed_latest_date,
+      planned_earliest_date,
+      planned_latest_date,
       additional_info,
       contact_emails,
     } = req.body;
@@ -342,12 +344,18 @@ operationsRouter.post(
       const seqVal = parseInt(seqRes.rows[0].seq, 10);
       const year = new Date().getFullYear();
 
+      // Supervisor/superadmin can set planned dates on create
+      const canSetPlanned = role === UserRole.SUPERVISOR || role === UserRole.SUPERADMIN;
+      const plannedEarly = canSetPlanned ? (planned_earliest_date || null) : null;
+      const plannedLate = canSetPlanned ? (planned_latest_date || null) : null;
+
       const insertRes = await client.query(
         `INSERT INTO planned_operations
            (operation_number, project_reference, short_description, kml_file_path, kml_points_json,
-            route_distance_km, proposed_earliest_date, proposed_latest_date, additional_info,
+            route_distance_km, proposed_earliest_date, proposed_latest_date,
+            planned_earliest_date, planned_latest_date, additional_info,
             status, created_by_user_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 1, $10)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 1, $12)
          RETURNING id, created_at`,
         [
           seqVal,
@@ -358,6 +366,8 @@ operationsRouter.post(
           routeDistance,
           proposed_earliest_date || null,
           proposed_latest_date || null,
+          plannedEarly,
+          plannedLate,
           additional_info?.trim() || null,
           req.session.userId,
         ]
