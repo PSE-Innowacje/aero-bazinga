@@ -569,6 +569,47 @@
   </div>
 </div>
 
+<!-- ═══════════════════ HAVERSINE ═══════════════════ -->
+<div class="slide bg-light">
+  <div class="stagger">
+    <p class="eyebrow">Algorytm</p>
+    <h2 class="navy">Obliczanie długości trasy</h2>
+    <p class="sub" style="color:var(--gray);">Wymaganie PRD 6.5.b — przybliżona suma odcinków między punktami KML</p>
+    <div class="g2 mt-32">
+      <div>
+        <h3 class="navy" style="margin-bottom:16px;">Jak to działa?</h3>
+        <div class="step"><div class="dot dot-navy">1</div><div><strong>Upload KML</strong><br><span style="font-size:13px; color:var(--gray);">Pilot/planista wgrywa plik KML z punktami trasy</span></div></div>
+        <div class="connector"></div>
+        <div class="step"><div class="dot dot-navy">2</div><div><strong>Parsowanie</strong><br><span style="font-size:13px; color:var(--gray);">Serwer wyodrębnia współrzędne (lat, lng) z XML</span></div></div>
+        <div class="connector"></div>
+        <div class="step"><div class="dot dot-navy">3</div><div><strong>Formuła Haversine</strong><br><span style="font-size:13px; color:var(--gray);">Odległość po powierzchni kuli (R = 6371 km)</span></div></div>
+        <div class="connector"></div>
+        <div class="step"><div class="dot dot-green">4</div><div><strong>Suma odcinków</strong><br><span style="font-size:13px; color:var(--gray);">A→B + B→C + C→D = łączna długość trasy</span></div></div>
+      </div>
+      <div>
+        <div class="card" style="border:none; background:var(--navy-light); margin-bottom:16px;">
+          <h3 class="navy" style="margin-bottom:12px;">Formuła Haversine</h3>
+          <div style="font-family:monospace; font-size:13px; line-height:2; color:var(--navy-mid);">
+            a = sin²(Δlat/2) + cos(lat₁) &middot; cos(lat₂) &middot; sin²(Δlng/2)<br>
+            c = 2 &middot; atan2(√a, √(1−a))<br>
+            d = R &middot; c<br>
+            <span style="font-size:11px; color:var(--gray);">gdzie R = 6371 km (promień Ziemi)</span>
+          </div>
+        </div>
+        <div class="card" style="border:none; background:var(--surface);">
+          <h3 style="color:var(--gray); margin-bottom:12px; font-size:14px;">Ograniczenia</h3>
+          <ul style="font-size:13px; color:var(--gray);">
+            <li>Min. 2, maks. 5000 punktów na plik KML</li>
+            <li>Wszystkie punkty muszą leżeć w granicach Polski</li>
+            <li>Przybliżenie — linia prosta między punktami, nie trasa lotu</li>
+            <li>Ziemia traktowana jako sfera (~0.3% błędu vs WGS84)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════ 9 SECURITY ═══════════════════ -->
 <div class="slide bg-dark">
   <div class="stagger">
