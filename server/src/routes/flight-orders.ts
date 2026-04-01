@@ -9,7 +9,7 @@ export const flightOrdersRouter = Router();
 
 // ─── Helper: format order number ────────────────────────────────────────────
 function formatOrderNumber(seqVal: number, year: number): string {
-  return `${year}-${String(seqVal).padStart(4, "0")}`;
+  return `NZ-${year}-${String(seqVal).padStart(4, "0")}`;
 }
 
 // ─── Helper: fetch full flight order by ID ──────────────────────────────────
@@ -82,7 +82,7 @@ async function fetchFlightOrderById(
   fo.operations = opsRes.rows.map((op: any) => {
     if (typeof op.operation_number === "number") {
       const year = new Date(op.created_at).getFullYear();
-      op.operation_number = `${year}-${String(op.operation_number).padStart(4, "0")}`;
+      op.operation_number = `NO-${year}-${String(op.operation_number).padStart(4, "0")}`;
     }
     return op;
   });

@@ -43,7 +43,7 @@ export const operationsRouter = Router();
 
 // ─── Helper: format operation number ─────────────────────────────────────────
 function formatOperationNumber(seqVal: number, year: number): string {
-  return `${year}-${String(seqVal).padStart(4, "0")}`;
+  return `NO-${year}-${String(seqVal).padStart(4, "0")}`;
 }
 
 // ─── Helper: build full operation object from DB row ─────────────────────────
@@ -215,7 +215,13 @@ operationsRouter.get("/:id", async (req: Request, res: Response) => {
          ORDER BY fo.planned_start_datetime ASC`,
         [id]
       );
-      op.flight_orders = flightOrdersRes.rows;
+      op.flight_orders = flightOrdersRes.rows.map((fo: any) => {
+        if (typeof fo.order_number === "number") {
+          const y = new Date(fo.planned_start_datetime || fo.created_at).getFullYear();
+          fo.order_number = `NZ-${y}-${String(fo.order_number).padStart(4, "0")}`;
+        }
+        return fo;
+      });
 
       return res.status(200).json({ operation: op });
     } finally {
