@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import { ROLE_DISPLAY_PL } from "shared/roles";
@@ -24,6 +25,17 @@ export function UsersPage() {
   const [users, setUsers] = useState<SystemUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredUsers = useMemo(() => {
+    if (!search.trim()) return users;
+    const q = search.toLowerCase();
+    return users.filter(u =>
+      u.email?.toLowerCase().includes(q) ||
+      u.first_name?.toLowerCase().includes(q) ||
+      u.last_name?.toLowerCase().includes(q)
+    );
+  }, [users, search]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -72,6 +84,10 @@ export function UsersPage() {
         </div>
       )}
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po emailu lub nazwisku..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -80,13 +96,13 @@ export function UsersPage() {
         </div>
       )}
 
-      {!isLoading && !error && users.length === 0 && (
+      {!isLoading && !error && filteredUsers.length === 0 && (
         <p className="text-body text-text-muted">
           Brak użytkowników. Dodaj pierwszego użytkownika.
         </p>
       )}
 
-      {!isLoading && !error && users.length > 0 && (
+      {!isLoading && !error && filteredUsers.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -97,7 +113,7 @@ export function UsersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>

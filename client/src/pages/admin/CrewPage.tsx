@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import type { CrewMember } from "shared/types";
@@ -27,6 +28,18 @@ export function CrewPage() {
   const [crew, setCrew] = useState<CrewMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredCrew = useMemo(() => {
+    if (!search.trim()) return crew;
+    const q = search.toLowerCase();
+    return crew.filter(m =>
+      m.email?.toLowerCase().includes(q) ||
+      m.first_name?.toLowerCase().includes(q) ||
+      m.last_name?.toLowerCase().includes(q) ||
+      m.role?.toLowerCase().includes(q)
+    );
+  }, [crew, search]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -60,6 +73,10 @@ export function CrewPage() {
         )}
       </div>
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po emailu, nazwisku lub roli..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -68,13 +85,13 @@ export function CrewPage() {
         </div>
       )}
 
-      {!isLoading && !error && crew.length === 0 && (
+      {!isLoading && !error && filteredCrew.length === 0 && (
         <p className="text-body text-text-muted">
           Brak członków załogi. Dodaj pierwszego członka załogi.
         </p>
       )}
 
-      {!isLoading && !error && crew.length > 0 && (
+      {!isLoading && !error && filteredCrew.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -87,7 +104,7 @@ export function CrewPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {crew.map((member) => (
+              {filteredCrew.map((member) => (
                 <TableRow key={member.id}>
                   <TableCell>{member.email}</TableCell>
                   <TableCell>{member.role}</TableCell>

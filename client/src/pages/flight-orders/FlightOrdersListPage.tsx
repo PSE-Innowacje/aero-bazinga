@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
@@ -60,6 +61,17 @@ export function FlightOrdersListPage() {
   const [orders, setOrders] = useState<FlightOrderListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredOrders = useMemo(() => {
+    if (!search.trim()) return orders;
+    const q = search.toLowerCase();
+    return orders.filter(fo =>
+      fo.order_number?.toLowerCase().includes(q) ||
+      fo.pilot_name?.toLowerCase().includes(q) ||
+      fo.helicopter_registration?.toLowerCase().includes(q)
+    );
+  }, [orders, search]);
 
   const canCreate = user?.role === UserRole.PILOT || user?.role === UserRole.SUPERADMIN;
 
@@ -124,6 +136,10 @@ export function FlightOrdersListPage() {
         </Select>
       </div>
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po numerze, pilocie lub helikopterze..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -132,13 +148,13 @@ export function FlightOrdersListPage() {
         </div>
       )}
 
-      {!isLoading && !error && orders.length === 0 && (
+      {!isLoading && !error && filteredOrders.length === 0 && (
         <p className="text-body text-text-muted">
           Brak zleceń dla wybranego filtra.
         </p>
       )}
 
-      {!isLoading && !error && orders.length > 0 && (
+      {!isLoading && !error && filteredOrders.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -151,7 +167,7 @@ export function FlightOrdersListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((fo) => (
+              {filteredOrders.map((fo) => (
                 <TableRow
                   key={fo.id}
                   className="cursor-pointer hover:bg-surface"

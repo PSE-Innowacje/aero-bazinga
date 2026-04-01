@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import type { Airfield } from "shared/types";
@@ -22,6 +23,15 @@ export function AirfieldsPage() {
   const [airfields, setAirfields] = useState<Airfield[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredAirfields = useMemo(() => {
+    if (!search.trim()) return airfields;
+    const q = search.toLowerCase();
+    return airfields.filter(a =>
+      a.name?.toLowerCase().includes(q)
+    );
+  }, [airfields, search]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,6 +65,10 @@ export function AirfieldsPage() {
         )}
       </div>
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po nazwie..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -63,13 +77,13 @@ export function AirfieldsPage() {
         </div>
       )}
 
-      {!isLoading && !error && airfields.length === 0 && (
+      {!isLoading && !error && filteredAirfields.length === 0 && (
         <p className="text-body text-text-muted">
           Brak lądowisk. Dodaj pierwsze lądowisko.
         </p>
       )}
 
-      {!isLoading && !error && airfields.length > 0 && (
+      {!isLoading && !error && filteredAirfields.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -81,7 +95,7 @@ export function AirfieldsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {airfields.map((airfield) => (
+              {filteredAirfields.map((airfield) => (
                 <TableRow key={airfield.id}>
                   <TableCell className="font-medium">{airfield.name}</TableCell>
                   <TableCell>{airfield.latitude}</TableCell>

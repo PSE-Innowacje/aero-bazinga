@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListSkeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/ui/search-input";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import type { Helicopter } from "shared/types";
@@ -23,6 +24,16 @@ export function HelicoptersPage() {
   const [helicopters, setHelicopters] = useState<Helicopter[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredHelicopters = useMemo(() => {
+    if (!search.trim()) return helicopters;
+    const q = search.toLowerCase();
+    return helicopters.filter(h =>
+      h.registration_number?.toLowerCase().includes(q) ||
+      h.type?.toLowerCase().includes(q)
+    );
+  }, [helicopters, search]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -56,6 +67,10 @@ export function HelicoptersPage() {
         )}
       </div>
 
+      <div className="mb-md">
+        <SearchInput value={search} onChange={setSearch} placeholder="Szukaj po nr rejestracyjnym lub typie..." />
+      </div>
+
       {isLoading && <ListSkeleton />}
 
       {error && (
@@ -64,13 +79,13 @@ export function HelicoptersPage() {
         </div>
       )}
 
-      {!isLoading && !error && helicopters.length === 0 && (
+      {!isLoading && !error && filteredHelicopters.length === 0 && (
         <p className="text-body text-text-muted">
           Brak helikopterów. Dodaj pierwszy helikopter.
         </p>
       )}
 
-      {!isLoading && !error && helicopters.length > 0 && (
+      {!isLoading && !error && filteredHelicopters.length > 0 && (
         <div className="rounded-md border border-border">
           <Table>
             <TableHeader>
@@ -82,7 +97,7 @@ export function HelicoptersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {helicopters.map((helicopter) => (
+              {filteredHelicopters.map((helicopter) => (
                 <TableRow key={helicopter.id}>
                   <TableCell className="font-medium">
                     {helicopter.registration_number}

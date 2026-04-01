@@ -11,6 +11,27 @@ import { UserRole } from "shared/roles";
 import { StatusBadge } from "@/components/ui/status-badge";
 import "leaflet/dist/leaflet.css";
 
+const FIELD_LABELS_PL: Record<string, string> = {
+  status: "Status",
+  project_reference: "Nr projektu",
+  short_description: "Opis skrócony",
+  proposed_earliest_date: "Proponowana data najwcześniejsza",
+  proposed_latest_date: "Proponowana data najpóźniejsza",
+  planned_earliest_date: "Planowana data najwcześniejsza",
+  planned_latest_date: "Planowana data najpóźniejsza",
+  route_distance_km: "Długość trasy (km)",
+  kml_file_path: "Plik KML",
+  operation_types: "Rodzaje czynności",
+  additional_info: "Dodatkowe informacje",
+  post_completion_notes: "Uwagi po realizacji",
+  contact_emails: "Osoby kontaktowe",
+  created: "Utworzenie",
+};
+
+function fieldLabelPL(field: string): string {
+  return FIELD_LABELS_PL[field] ?? field;
+}
+
 function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "—";
   return dateStr.substring(0, 10);
@@ -472,7 +493,7 @@ export function OperationDetailPage() {
                     <tr key={h.id} className="border-b border-border-subtle last:border-0">
                       <td className="py-xs pr-md text-xs text-text-muted">{formatDateTime(h.changed_at)}</td>
                       <td className="py-xs pr-md text-xs">{h.user_email}</td>
-                      <td className="py-xs pr-md text-xs font-medium">{h.field_name}</td>
+                      <td className="py-xs pr-md text-xs font-medium">{fieldLabelPL(h.field_name)}</td>
                       <td className="py-xs pr-md text-xs text-text-muted">{h.old_value ?? "—"}</td>
                       <td className="py-xs text-xs">{h.new_value ?? "—"}</td>
                     </tr>
