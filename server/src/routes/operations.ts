@@ -43,7 +43,7 @@ export const operationsRouter = Router();
 
 // ─── Helper: format operation number ─────────────────────────────────────────
 function formatOperationNumber(seqVal: number, year: number): string {
-  return `${year}-${String(seqVal).padStart(4, "0")}`;
+  return `NO-${year}-${String(seqVal).padStart(4, "0")}`;
 }
 
 // ─── Helper: build full operation object from DB row ─────────────────────────
@@ -215,7 +215,13 @@ operationsRouter.get("/:id", async (req: Request, res: Response) => {
          ORDER BY fo.planned_start_datetime ASC`,
         [id]
       );
-      op.flight_orders = flightOrdersRes.rows;
+      op.flight_orders = flightOrdersRes.rows.map((fo: any) => {
+        if (typeof fo.order_number === "number") {
+          const y = new Date(fo.planned_start_datetime || fo.created_at).getFullYear();
+          fo.order_number = `NZ-${y}-${String(fo.order_number).padStart(4, "0")}`;
+        }
+        return fo;
+      });
 
       return res.status(200).json({ operation: op });
     } finally {
@@ -261,6 +267,8 @@ operationsRouter.post(
       operation_type_ids,
       proposed_earliest_date,
       proposed_latest_date,
+      planned_earliest_date,
+      planned_latest_date,
       additional_info,
       contact_emails,
     } = req.body;
@@ -336,12 +344,18 @@ operationsRouter.post(
       const seqVal = parseInt(seqRes.rows[0].seq, 10);
       const year = new Date().getFullYear();
 
+      // Supervisor/superadmin can set planned dates on create
+      const canSetPlanned = role === UserRole.SUPERVISOR || role === UserRole.SUPERADMIN;
+      const plannedEarly = canSetPlanned ? (planned_earliest_date || null) : null;
+      const plannedLate = canSetPlanned ? (planned_latest_date || null) : null;
+
       const insertRes = await client.query(
         `INSERT INTO planned_operations
            (operation_number, project_reference, short_description, kml_file_path, kml_points_json,
-            route_distance_km, proposed_earliest_date, proposed_latest_date, additional_info,
+            route_distance_km, proposed_earliest_date, proposed_latest_date,
+            planned_earliest_date, planned_latest_date, additional_info,
             status, created_by_user_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 1, $10)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 1, $12)
          RETURNING id, created_at`,
         [
           seqVal,
@@ -352,6 +366,8 @@ operationsRouter.post(
           routeDistance,
           proposed_earliest_date || null,
           proposed_latest_date || null,
+          plannedEarly,
+          plannedLate,
           additional_info?.trim() || null,
           req.session.userId,
         ]

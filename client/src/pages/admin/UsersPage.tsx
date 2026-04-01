@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import { ROLE_DISPLAY_PL } from "shared/roles";
@@ -71,7 +72,7 @@ export function UsersPage() {
         </div>
       )}
 
-      {isLoading && <p className="text-body text-text-muted">Ładowanie...</p>}
+      {isLoading && <ListSkeleton />}
 
       {error && (
         <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">

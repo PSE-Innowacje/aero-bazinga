@@ -4,6 +4,8 @@ import { ChevronLeft, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import type { FlightOrder, KmlPoint } from "shared/types";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
@@ -265,12 +267,15 @@ export function FlightOrderDetailPage() {
       const data = await res.json();
       if (!res.ok) {
         setStatusActionError(data.message || "Błąd zmiany statusu.");
+        toast.error(data.message || "Nie udało się zmienić statusu zlecenia");
         return;
       }
+      toast.success("Status zlecenia został zmieniony");
       setOrder(data.order);
       setShowCompletionDialog(false);
     } catch {
       setStatusActionError("Błąd serwera.");
+      toast.error("Błąd serwera");
     } finally {
       setStatusActionLoading(false);
     }
@@ -305,7 +310,7 @@ export function FlightOrderDetailPage() {
   }
 
   if (isLoading)
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <DetailSkeleton />;
   if (error)
     return (
       <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">

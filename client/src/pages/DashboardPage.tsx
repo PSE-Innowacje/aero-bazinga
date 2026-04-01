@@ -20,6 +20,7 @@ function HelicopterIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+import { DashboardSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { ROLE_DISPLAY_PL } from "shared/roles";
 import { UserRole } from "shared/roles";
@@ -244,7 +245,7 @@ export function DashboardPage() {
   if (!user) return null;
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <DashboardSkeleton />;
   }
 
   if (error) {

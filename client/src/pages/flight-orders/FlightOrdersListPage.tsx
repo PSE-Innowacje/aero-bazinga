@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
@@ -123,9 +124,7 @@ export function FlightOrdersListPage() {
         </Select>
       </div>
 
-      {isLoading && (
-        <p className="text-body text-text-muted">Ładowanie...</p>
-      )}
+      {isLoading && <ListSkeleton />}
 
       {error && (
         <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">

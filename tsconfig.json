@@ -8,9 +8,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "references": [
-    { "path": "./client" },
-    { "path": "./server" },
-    { "path": "./shared" }
-  ]
+  "include": ["shared/src"]
 }

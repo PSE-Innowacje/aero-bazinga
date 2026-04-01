@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AERO — Stos technologiczny</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --navy: #003E7E;
+    --navy-dark: #001428;
+    --navy-mid: #002E5E;
+    --navy-light: #EBF2FA;
+    --red: #D20A11;
+    --gray: #707070;
+    --surface: #F4F5F7;
+    --text: #1A1D21;
+    --white: #FFFFFF;
+    --green: #16A34A;
+    --green-bg: #ECFDF5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  .header {
+    background: var(--navy-dark);
+    color: var(--white);
+    padding: 48px 0 40px;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40%;
+    height: 100%;
+    background: radial-gradient(ellipse at 80% 30%, rgba(0,62,126,0.4), transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .header a.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+  }
+  .header a.back:hover { color: var(--white); }
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 16px;
+    opacity: 0.55;
+  }
+
+  /* ── Content ─────────────────────────────────── */
+  .content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── Sections ────────────────────────────────── */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 28px 0 12px;
+  }
+
+  /* ── Tables ──────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gray);
+    border-bottom: 2px solid #E5E7EB;
+    background: var(--surface);
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: top;
+  }
+  tbody tr:hover {
+    background: #FAFBFC;
+  }
+  td strong, td code {
+    color: var(--navy);
+  }
+  td code {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 12px;
+    background: var(--navy-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .ver {
+    color: var(--gray);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .why {
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* ── Divider ─────────────────────────────────── */
+  hr {
+    border: none;
+    border-top: 1px solid #F0F0F0;
+    margin: 48px 0;
+  }
+
+  /* ── Badge ───────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .b-navy { background: var(--navy-light); color: var(--navy); }
+  .b-green { background: var(--green-bg); color: var(--green); }
+
+  /* ── Footer ──────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--gray);
+    border-top: 1px solid #F0F0F0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="prezentacja.html" class="back">&larr; Powrót do prezentacji</a>
+    <h1>Stos technologiczny</h1>
+    <p>AERO — System Zarządzania Operacjami Lotniczymi</p>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ═══ FRONTEND ═══ -->
+<div class="section">
+  <p class="section-label">Frontend</p>
+  <h2>Interfejs użytkownika</h2>
+  <table>
+    <thead><tr><th>Technologia</th><th style="width:70px;">Wersja</th><th>Opis</th><th>Dlaczego?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>React</strong></td><td class="ver">18.3</td><td>Biblioteka do budowania interfejsów opartych na komponentach</td><td class="why">Standard rynkowy, ogromny ekosystem, komponenty reaktywne</td></tr>
+      <tr><td><strong>TypeScript</strong></td><td class="ver">5.7</td><td>Nadzbiór JavaScript z typowaniem statycznym</td><td class="why">Bezpieczeństwo typów, lepsza refaktoryzacja, autouzupełnianie</td></tr>
+      <tr><td><strong>Vite</strong></td><td class="ver">6.0</td><td>Nowoczesny bundler i serwer deweloperski</td><td class="why">Błyskawiczny HMR, szybki cold start, wsparcie ESM</td></tr>
+      <tr><td><strong>Tailwind CSS</strong></td><td class="ver">3.4</td><td>Narzędziowy framework CSS (utility-first)</td><td class="why">Szybkie prototypowanie, spójny design system</td></tr>
+      <tr><td><strong>shadcn/ui</strong></td><td class="ver">—</td><td>Gotowe komponenty UI oparte na Radix UI</td><td class="why">Dostępność (a11y), pełna kontrola nad kodem</td></tr>
+      <tr><td><strong>React Router</strong></td><td class="ver">6.28</td><td>Routing po stronie klienta (SPA)</td><td class="why">Zagnieżdżone trasy, ochrona tras, lazy loading</td></tr>
+      <tr><td><strong>React Hook Form</strong></td><td class="ver">7.59</td><td>Zarządzanie formularzami z walidacją</td><td class="why">Minimalne re-rendery, integracja z Zod</td></tr>
+      <tr><td><strong>Zod</strong></td><td class="ver">3.23</td><td>Deklaratywna walidacja schematów danych</td><td class="why">Walidacja formularzy, inferencja typów TypeScript</td></tr>
+      <tr><td><strong>Leaflet</strong></td><td class="ver">1.9</td><td>Interaktywne mapy open-source</td><td class="why">Trasy KML, znaczniki lądowisk, brak kluczy API</td></tr>
+      <tr><td><strong>react-leaflet</strong></td><td class="ver">4.2</td><td>Integracja Leaflet z React</td><td class="why">Mapa jako komponent React</td></tr>
+      <tr><td><strong>react-day-picker</strong></td><td class="ver">8.10</td><td>Komponent wyboru daty z kalendarzem</td><td class="why">Polski locale, lepszy UX niż natywny input</td></tr>
+      <tr><td><strong>date-fns</strong></td><td class="ver">3.6</td><td>Biblioteka do operacji na datach</td><td class="why">Lekka, modularna, lokalizacja (pl)</td></tr>
+      <tr><td><strong>Lucide React</strong></td><td class="ver">0.468</td><td>Zestaw ikon SVG</td><td class="why">Lekkie, spójne, tree-shakeable</td></tr>
+      <tr><td><strong>clsx + tailwind-merge</strong></td><td class="ver">—</td><td>Łączenie klas CSS</td><td class="why">Warunkowe klasy, rozwiązywanie konfliktów</td></tr>
+      <tr><td><strong>class-variance-authority</strong></td><td class="ver">0.7</td><td>Warianty komponentów</td><td class="why">Typowane warianty dla shadcn/ui</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Radix UI (primitives)</h3>
+  <table>
+    <thead><tr><th>Komponent</th><th>Zastosowanie</th></tr></thead>
+    <tbody>
+      <tr><td><code>react-select</code></td><td>Rozwijane listy (status, rola, helikopter)</td></tr>
+      <tr><td><code>react-dialog</code></td><td>Okna modalne</td></tr>
+      <tr><td><code>react-popover</code></td><td>Menu kontekstowe profilu, kalendarz</td></tr>
+      <tr><td><code>react-tooltip</code></td><td>Podpowiedzi w zwiniętym sidebarze</td></tr>
+      <tr><td><code>react-label</code></td><td>Etykiety formularzy z dostępnością</td></tr>
+      <tr><td><code>react-dropdown-menu</code></td><td>Menu rozwijane</td></tr>
+      <tr><td><code>react-separator</code></td><td>Separatory wizualne</td></tr>
+      <tr><td><code>react-avatar</code></td><td>Awatary użytkowników</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══ BACKEND ═══ -->
+<div class="section">
+  <p class="section-label">Backend</p>
+  <h2>Serwer aplikacji</h2>
+  <table>
+    <thead><tr><th>Technologia</th><th style="width:70px;">Wersja</th><th>Opis</th><th>Dlaczego?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Node.js</strong></td><td class="ver">24.x</td><td>Środowisko uruchomieniowe JavaScript</td><td class="why">Jeden język (TS) na obu końcach</td></tr>
+      <tr><td><strong>Express</strong></td><td class="ver">4.21</td><td>Minimalistyczny framework webowy</td><td class="why">Standard, elastyczność, ogromny ekosystem</td></tr>
+      <tr><td><strong>TypeScript</strong></td><td class="ver">5.7</td><td>Typowanie statyczne</td><td class="why">Spójność z frontendem, bezpieczeństwo typów</td></tr>
+      <tr><td><strong>tsx</strong></td><td class="ver">4.19</td><td>Uruchamianie TS bez kompilacji</td><td class="why">Hot reload (<code>tsx watch</code>)</td></tr>
+      <tr><td><strong>express-session</strong></td><td class="ver">1.18</td><td>Zarządzanie sesjami</td><td class="why">HTTP-only cookies, bezpieczny stan</td></tr>
+      <tr><td><strong>connect-pg-simple</strong></td><td class="ver">10.0</td><td>Sesje w PostgreSQL</td><td class="why">Przeżywają restart serwera</td></tr>
+      <tr><td><strong>bcryptjs</strong></td><td class="ver">2.4</td><td>Hashowanie haseł</td><td class="why">Bezpieczne przechowywanie, koszt 12</td></tr>
+      <tr><td><strong>helmet</strong></td><td class="ver">8.0</td><td>Nagłówki bezpieczeństwa HTTP</td><td class="why">XSS, clickjacking, MIME sniffing</td></tr>
+      <tr><td><strong>cors</strong></td><td class="ver">2.8</td><td>Cross-Origin Resource Sharing</td><td class="why">Frontend na innym porcie</td></tr>
+      <tr><td><strong>express-rate-limit</strong></td><td class="ver">8.3</td><td>Rate limiting</td><td class="why">Ochrona przed brute-force</td></tr>
+      <tr><td><strong>multer</strong></td><td class="ver">2.1</td><td>Upload plików</td><td class="why">Pliki KML (multipart/form-data)</td></tr>
+      <tr><td><strong>fast-xml-parser</strong></td><td class="ver">5.5</td><td>Parser XML / KML</td><td class="why">Czysty JS, ESM, brak natywnych zależności</td></tr>
+      <tr><td><strong>pg</strong></td><td class="ver">8.20</td><td>Klient PostgreSQL</td><td class="why">Raw SQL, pool połączeń, pełna kontrola</td></tr>
+      <tr><td><strong>dotenv</strong></td><td class="ver">16.4</td><td>Zmienne środowiskowe</td><td class="why">Konfiguracja bez hardkodowania</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══ DATABASE ═══ -->
+<div class="section">
+  <p class="section-label">Baza danych</p>
+  <h2>PostgreSQL 17</h2>
+  <table>
+    <thead><tr><th>Element</th><th>Szczegóły</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tabel</strong></td><td>16 — crew_members, users, session, helicopters, airfields, operation_types, planned_operations, planned_operation_types, operation_contact_persons, operation_comments, operation_history, flight_orders, flight_order_crew_members, flight_order_operations, crew_roles, role_permissions</td></tr>
+      <tr><td><strong>Podejście</strong></td><td>Raw SQL (bez ORM) — <code>schema.sql</code> jest kanonicznym źródłem prawdy</td></tr>
+      <tr><td><strong>Migracje</strong></td><td>Idempotentne (<code>IF NOT EXISTS</code>), bezpieczne do ponownego uruchomienia</td></tr>
+      <tr><td><strong>Sesje</strong></td><td>Tabela <code>session</code> via connect-pg-simple</td></tr>
+      <tr><td><strong>Sekwencje</strong></td><td><code>operation_number_seq</code>, <code>order_number_seq</code> — autonumeracja</td></tr>
+      <tr><td><strong>Enum</strong></td><td><code>user_role</code> — superadmin, administrator, planner, supervisor, pilot</td></tr>
+      <tr><td><strong>Statusy</strong></td><td>SMALLINT (1-7) — wydajniejszy niż string, etykiety w <code>shared/</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══ TESTS ═══ -->
+<div class="section">
+  <p class="section-label">Testy</p>
+  <h2>131 testów, 0 błędów</h2>
+  <table>
+    <thead><tr><th>Technologia</th><th style="width:70px;">Wersja</th><th>Opis</th><th>Dlaczego?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Vitest</strong></td><td class="ver">4.1</td><td>Testy jednostkowe</td><td class="why">Natywna integracja z Vite/TS, szybki, API jak Jest</td></tr>
+      <tr><td><strong>Playwright</strong></td><td class="ver">1.58</td><td>Testy E2E (przeglądarkowe)</td><td class="why">Stabilne selektory, auto-wait, headless</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pokrycie testów</h3>
+  <table>
+    <thead><tr><th>Typ</th><th style="text-align:center;">Testów</th><th>Zakres</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge b-navy">Unit</span></td><td style="text-align:center; font-weight:700;">66</td><td>Haversine, KML parser, uprawnienia, statusy, role, 6 reguł walidacji zleceń</td></tr>
+      <tr><td><span class="badge b-green">E2E</span></td><td style="text-align:center; font-weight:700;">65</td><td>Auth/RBAC, admin CRUD, operacje, zlecenia, dashboard, uprawnienia, user stories</td></tr>
+      <tr><td style="font-weight:700; border-top:2px solid #E5E7EB;">Łącznie</td><td style="text-align:center; font-weight:800; border-top:2px solid #E5E7EB;">131</td><td style="border-top:2px solid #E5E7EB;"></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══ AI ═══ -->
+<div class="section">
+  <p class="section-label">Narzędzia AI</p>
+  <h2>Agentic Coding</h2>
+  <table>
+    <thead><tr><th>Narzędzie</th><th>Model</th><th>Zastosowanie</th><th>Dlaczego?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Claude Code CLI</strong></td><td class="ver">Sonnet 4.6</td><td>Pair programming — kod, implementacja, testy</td><td class="why">Autonomiczne kodowanie z commitami</td></tr>
+      <tr><td><strong>Claude Code CLI</strong></td><td class="ver">Opus 4.6</td><td>Code review — bezpieczeństwo, architektura</td><td class="why">Niezależny model weryfikuje Sonnet</td></tr>
+      <tr><td><strong>GSD Workflow</strong></td><td class="ver">—</td><td>Orkiestracja agentów AI</td><td class="why">Strukturalny workflow: plan → execute → test → review</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Workflow GSD (Get Shit Done)</h3>
+  <table>
+    <thead><tr><th>Komenda</th><th>Etap</th><th>Opis</th></tr></thead>
+    <tbody>
+      <tr><td><code>/gsd:new-project</code></td><td>Inicjalizacja</td><td>Analiza PRD, tworzenie roadmapy, wymagań</td></tr>
+      <tr><td><code>/gsd:discuss-phase</code></td><td>Dyskusja</td><td>Omówienie szarych stref i decyzji z użytkownikiem</td></tr>
+      <tr><td><code>/gsd:ui-phase</code></td><td>Projektowanie</td><td>Kontrakt wizualny (UI-SPEC.md)</td></tr>
+      <tr><td><code>/gsd:plan-phase</code></td><td>Planowanie</td><td>Szczegółowe plany implementacji</td></tr>
+      <tr><td><code>/gsd:execute-phase</code></td><td>Wykonanie</td><td>Autonomiczne kodowanie z atomic commits</td></tr>
+      <tr><td><code>/gsd:add-tests</code></td><td>Testowanie</td><td>Generowanie testów jednostkowych i E2E</td></tr>
+      <tr><td><code>/gsd:review</code></td><td>Przegląd</td><td>Cross-AI code review (Opus weryfikuje Sonnet)</td></tr>
+      <tr><td><code>/gsd:ui-review</code></td><td>Audyt UI</td><td>6-filarowy audyt wizualny</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══ DEVTOOLS ═══ -->
+<div class="section">
+  <p class="section-label">DevOps</p>
+  <h2>Narzędzia deweloperskie</h2>
+  <table>
+    <thead><tr><th>Narzędzie</th><th>Zastosowanie</th></tr></thead>
+    <tbody>
+      <tr><td><strong>npm workspaces</strong></td><td>Monorepo — client, server, shared jako osobne pakiety</td></tr>
+      <tr><td><strong>Git</strong></td><td>Kontrola wersji, conventional commits</td></tr>
+      <tr><td><strong>PostCSS + Autoprefixer</strong></td><td>Przetwarzanie CSS, kompatybilność przeglądarek</td></tr>
+      <tr><td><strong>tailwindcss-animate</strong></td><td>Animacje CSS dla komponentów shadcn/ui</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  AERO v1.0 &middot; PSE Innowacje &middot; kwiecień 2026
+</div>
+
+</body>
+</html>

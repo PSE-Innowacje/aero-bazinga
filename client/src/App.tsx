@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
@@ -38,6 +39,19 @@ function PlaceholderPage({ title }: { title: string }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: { fontFamily: "Inter, sans-serif", fontSize: "14px" },
+          classNames: {
+            success: "!bg-[#ECFDF5] !text-[#16A34A] !border-[#16A34A]/20",
+            error: "!bg-[#FFF5F5] !text-[#D20A11] !border-[#D20A11]/20",
+            info: "!bg-[#EBF2FA] !text-[#003E7E] !border-[#003E7E]/20",
+          },
+        }}
+        richColors
+        closeButton
+      />
       <AuthProvider>
         <Routes>
           {/* Public routes */}

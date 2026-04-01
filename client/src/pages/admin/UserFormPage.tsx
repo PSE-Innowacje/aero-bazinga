@@ -22,7 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { UserRole, ROLE_DISPLAY_PL } from "shared/roles";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { PermissionLevel } from "shared/permissions";
 import { useAuth } from "@/context/AuthContext";
 import type { CrewMember } from "shared/types";
@@ -176,16 +178,19 @@ export function UserFormPage() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.message || "Błąd serwera.");
+        toast.error(data.message || "Nie udało się zapisać użytkownika");
         return;
       }
+      toast.success(isEdit ? "Zmiany zostały zapisane" : "Użytkownik został utworzony");
       navigate("/admin/users");
     } catch {
       setServerError("Błąd serwera. Skontaktuj się z administratorem.");
+      toast.error("Błąd serwera. Skontaktuj się z administratorem");
     }
   }
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <FormSkeleton />;
   }
 
   return (

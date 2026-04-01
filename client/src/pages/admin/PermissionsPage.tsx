@@ -15,8 +15,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
+import { ListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import { UserRole, ROLE_DISPLAY_PL } from "shared/roles";
@@ -96,20 +98,23 @@ export function PermissionsPage() {
 
       if (!res.ok) {
         setError(data.message || "Błąd zapisu uprawnień.");
+        toast.error(data.message || "Nie udało się zapisać uprawnień");
         return;
       }
 
       setSuccess("Uprawnienia zostały zaktualizowane.");
+      toast.success("Uprawnienia zostały zapisane");
       await reloadPermissions();
     } catch {
       setError("Błąd serwera. Spróbuj ponownie.");
+      toast.error("Błąd serwera. Spróbuj ponownie");
     } finally {
       setIsSaving(false);
     }
   }
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <ListSkeleton />;
   }
 
   return (

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 import type { PlannedOperation, OperationTypeRow } from "shared/types";
@@ -12,10 +14,10 @@ import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
 
 // Textarea component (not in shadcn set, using plain HTML styled)
-function Textarea({ ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+      className={`min-h-[120px] w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-text placeholder:text-secondary focus-visible:outline-none focus-visible:border-2 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 resize-y ${className ?? ""}`}
       {...props}
     />
   );
@@ -211,11 +213,14 @@ export function OperationFormPage() {
       const data = await res.json();
       if (!res.ok) {
         setErrors({ server: data.message || "Błąd serwera." });
+        toast.error(data.message || "Nie udało się zapisać operacji");
         return;
       }
+      toast.success(isEdit ? "Zmiany zostały zapisane" : "Operacja została utworzona");
       navigate(`/operations/${data.operation.id}`);
     } catch {
       setErrors({ server: "Błąd serwera. Spróbuj ponownie." });
+      toast.error("Błąd serwera. Spróbuj ponownie");
     } finally {
       setIsSubmitting(false);
     }
@@ -225,7 +230,7 @@ export function OperationFormPage() {
   const showPostCompletionNotes = isSupervisor && existing && existing.status >= 5;
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <FormSkeleton />;
   }
 
   if (!canWrite) {
@@ -238,7 +243,7 @@ export function OperationFormPage() {
     : null;
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <Link
         to={isEdit && id ? `/operations/${id}` : "/operations"}
         className="mb-lg inline-flex items-center text-sm text-primary hover:underline"
@@ -383,7 +388,7 @@ export function OperationFormPage() {
         )}
 
         {/* Additional info */}
-        <div>
+        <div style={{gridColumn: '1 / -1'}}>
           <Label htmlFor="additional_info">Dodatkowe informacje / priorytety</Label>
           <Textarea
             id="additional_info"
@@ -391,7 +396,8 @@ export function OperationFormPage() {
             onChange={(e) => setAdditionalInfo(e.target.value)}
             maxLength={500}
             placeholder="Opcjonalne uwagi, priorytety..."
-            className="mt-xs"
+            className="mt-xs w-full border border-border rounded-md"
+            style={{ minHeight: "160px" }}
           />
           <div className="mt-xs flex justify-end text-xs text-text-muted">
             {additionalInfo.length}/500
@@ -433,32 +439,54 @@ export function OperationFormPage() {
 
         {/* KML file */}
         <div>
-          <Label htmlFor="kml_file">
+          <Label>
             Plik trasy KML {!isEdit && <span className="text-accent">*</span>}
           </Label>
           <div className="mt-xs">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".kml"
+              onChange={(e) => { setKmlFile(e.target.files?.[0] ?? null); }}
+              className="hidden"
+            />
             {kmlFile ? (
-              <div className="flex items-center gap-sm rounded-md border border-border bg-surface px-sm py-xs">
-                <span className="flex-1 truncate text-sm">{kmlFile.name}</span>
+              <div className="flex items-center gap-sm rounded-md border border-border bg-surface px-md py-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span className="flex-1 truncate text-sm font-medium">{kmlFile.name}</span>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setKmlFile(null);
                     if (fileInputRef.current) fileInputRef.current.value = "";
                   }}
-                  className="text-text-muted hover:text-accent"
+                  className="shrink-0 flex items-center justify-center h-8 w-8 rounded-md text-text-muted hover:text-accent hover:bg-[#FFF5F5] transition-colors"
+                  aria-label="Usuń plik"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
             ) : (
-              <Input
-                ref={fileInputRef}
-                id="kml_file"
-                type="file"
-                accept=".kml"
-                onChange={(e) => setKmlFile(e.target.files?.[0] ?? null)}
-              />
+              <div
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("border-primary", "bg-primary/5"); }}
+                onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove("border-primary", "bg-primary/5"); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove("border-primary", "bg-primary/5");
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.name.endsWith(".kml")) {
+                    setKmlFile(file);
+                  }
+                }}
+                onClick={() => fileInputRef.current?.click()}
+                className="flex flex-col items-center justify-center gap-sm rounded-lg border-2 border-dashed border-border bg-surface px-lg py-xl cursor-pointer transition-colors hover:border-primary hover:bg-[#EBF2FA]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span className="text-sm font-semibold text-primary">Przeciągnij plik KML tutaj</span>
+                <span className="text-xs text-text-muted">lub kliknij, aby wybrać z dysku</span>
+              </div>
             )}
             {isEdit && !kmlFile && (
               <p className="mt-xs text-xs text-text-muted">

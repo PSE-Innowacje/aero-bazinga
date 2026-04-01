@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,8 +60,10 @@ export function LoginPage() {
         message.includes("invalid_credentials")
       ) {
         setServerError("Nieprawidłowy email lub hasło. Spróbuj ponownie.");
+        toast.error("Nieprawidłowy email lub hasło");
       } else {
         setServerError("Błąd serwera. Skontaktuj się z administratorem.");
+        toast.error("Błąd logowania. Skontaktuj się z administratorem");
       }
     } finally {
       setIsSubmitting(false);

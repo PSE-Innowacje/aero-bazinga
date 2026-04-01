@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { PlannedOperation } from "shared/types";
@@ -113,9 +114,7 @@ export function OperationsListPage() {
         </Select>
       </div>
 
-      {isLoading && (
-        <p className="text-body text-text-muted">Ładowanie...</p>
-      )}
+      {isLoading && <ListSkeleton />}
 
       {error && (
         <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">

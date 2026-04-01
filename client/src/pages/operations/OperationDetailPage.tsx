@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { ChevronLeft, Pencil, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import type { PlannedOperation, OperationComment, OperationHistory, KmlPoint } from "shared/types";
 import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
@@ -173,13 +175,16 @@ export function OperationDetailPage() {
       const data = await res.json();
       if (!res.ok) {
         setStatusActionError(data.message || "Błąd zmiany statusu.");
+        toast.error(data.message || "Nie udało się zmienić statusu operacji");
         return;
       }
+      toast.success("Status operacji został zmieniony");
       setOperation(data.operation);
       // Reload history to show new transition
       loadHistory();
     } catch {
       setStatusActionError("Błąd serwera.");
+      toast.error("Błąd serwera");
     } finally {
       setStatusActionLoading(false);
     }
@@ -215,7 +220,7 @@ export function OperationDetailPage() {
     }
   }
 
-  if (isLoading) return <p className="text-body text-text-muted">Ładowanie...</p>;
+  if (isLoading) return <DetailSkeleton />;
   if (error) return (
     <div className="rounded-md border border-accent bg-[#FFF5F5] p-md text-sm text-accent">{error}</div>
   );
