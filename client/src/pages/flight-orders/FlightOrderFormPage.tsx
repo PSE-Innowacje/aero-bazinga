@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import type {
   Helicopter,
@@ -362,11 +364,14 @@ export function FlightOrderFormPage() {
         } else {
           setErrors({ server: data.message || "Błąd serwera." });
         }
+        toast.error(data.message || "Nie udało się zapisać zlecenia na lot");
         return;
       }
+      toast.success(isEdit ? "Zmiany zostały zapisane" : "Zlecenie na lot zostało utworzone");
       navigate(`/flight-orders/${data.order.id}`);
     } catch {
       setErrors({ server: "Błąd serwera. Spróbuj ponownie." });
+      toast.error("Błąd serwera. Spróbuj ponownie");
     } finally {
       setIsSubmitting(false);
     }
@@ -390,7 +395,7 @@ export function FlightOrderFormPage() {
   );
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <FormSkeleton />;
   }
 
   if ((!isEdit && !canCreate) || (isEdit && !canEditFO)) {

@@ -23,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 
@@ -156,16 +158,19 @@ export function HelicopterFormPage() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.message || "Błąd serwera.");
+        toast.error(data.message || "Nie udało się zapisać helikoptera");
         return;
       }
+      toast.success(isEdit ? "Zmiany zostały zapisane" : "Helikopter został utworzony");
       navigate("/admin/helicopters");
     } catch {
       setServerError("Błąd serwera. Skontaktuj się z administratorem.");
+      toast.error("Błąd serwera. Skontaktuj się z administratorem");
     }
   }
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <FormSkeleton />;
   }
 
   return (

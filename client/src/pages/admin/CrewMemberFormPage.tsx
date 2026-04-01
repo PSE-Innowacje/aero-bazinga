@@ -23,7 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { CREW_ROLES } from "shared/crew-roles";
+import { FormSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { PermissionLevel } from "shared/permissions";
 
@@ -184,16 +186,19 @@ export function CrewMemberFormPage() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.message || "Błąd serwera.");
+        toast.error(data.message || "Nie udało się zapisać członka załogi");
         return;
       }
+      toast.success(isEdit ? "Zmiany zostały zapisane" : "Członek załogi został utworzony");
       navigate("/admin/crew");
     } catch {
       setServerError("Błąd serwera. Skontaktuj się z administratorem.");
+      toast.error("Błąd serwera. Skontaktuj się z administratorem");
     }
   }
 
   if (isLoading) {
-    return <p className="text-body text-text-muted">Ładowanie...</p>;
+    return <FormSkeleton />;
   }
 
   return (
