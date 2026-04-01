@@ -1,18 +1,24 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { SessionUser } from "shared/types";
+import type { PermissionLevel, MenuSection } from "shared/permissions";
+
+type RolePermissions = Record<MenuSection, PermissionLevel>;
 
 interface AuthContextValue {
   user: SessionUser | null;
+  permissions: RolePermissions | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  reloadPermissions: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
+  const [permissions, setPermissions] = useState<RolePermissions | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // On mount: restore session from server (AUTH-02)
@@ -25,11 +31,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
+          setPermissions(data.permissions ?? null);
         } else {
           setUser(null);
+          setPermissions(null);
         }
       } catch {
         setUser(null);
+        setPermissions(null);
       } finally {
         setIsLoading(false);
       }
@@ -52,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const data = await res.json();
     setUser(data.user);
+    setPermissions(data.permissions ?? null);
   };
 
   const logout = async () => {
@@ -62,7 +72,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
     } finally {
       setUser(null);
+      setPermissions(null);
       window.location.href = "/login";
+    }
+  };
+
+  const reloadPermissions = async () => {
+    try {
+      const res = await fetch("/api/auth/me", { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setPermissions(data.permissions ?? null);
+      }
+    } catch {
+      // ignore
     }
   };
 
@@ -70,10 +93,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        permissions,
         isLoading,
         isAuthenticated: !!user,
         login,
         logout,
+        reloadPermissions,
       }}
     >
       {children}

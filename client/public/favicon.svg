@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Shield -->
+  <path d="M16 2L4 8v8c0 7.2 5.12 13.92 12 16 6.88-2.08 12-8.8 12-16V8L16 2z" fill="#003E7E"/>
+  <!-- Rotor hub -->
+  <circle cx="16" cy="14" r="2.5" fill="white"/>
+  <!-- Rotor blades -->
+  <rect x="6" y="13" width="9" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="17" y="13" width="9" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="15" y="6" width="2" height="7" rx="1" fill="white" opacity="0.7"/>
+  <rect x="15" y="17" width="2" height="5" rx="1" fill="white" opacity="0.7"/>
+  <!-- Body -->
+  <path d="M12 20h8l1 2H11l1-2z" fill="white" opacity="0.85"/>
+</svg>

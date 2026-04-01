@@ -1,13 +1,27 @@
 import { Router, Request, Response } from "express";
 import bcryptjs from "bcryptjs";
+import rateLimit from "express-rate-limit";
 import { pool } from "../db/pool.js";
 import { UserRole } from "shared/roles";
 import type { SessionUser, LoginRequest } from "shared/types";
+import { getPermissions } from "../db/permissions-cache.js";
 
 export const authRouter = Router();
 
+// Rate limit: 10 login attempts per minute per IP
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: {
+    error: "too_many_requests",
+    message: "Zbyt wiele prób logowania. Spróbuj ponownie za minutę.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // POST /api/auth/login — AUTH-01
-authRouter.post("/login", async (req: Request, res: Response) => {
+authRouter.post("/login", loginLimiter, async (req: Request, res: Response) => {
   const { email, password } = req.body as LoginRequest;
 
   if (!email || !password) {
@@ -59,7 +73,10 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       crewMemberId: user.crew_member_id ?? null,
     };
 
-    return res.status(200).json({ user: sessionUser });
+    const allPermissions = getPermissions();
+    const rolePermissions = allPermissions[user.role as string] ?? {};
+
+    return res.status(200).json({ user: sessionUser, permissions: rolePermissions });
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({
@@ -86,7 +103,10 @@ authRouter.get("/me", (req: Request, res: Response) => {
     crewMemberId: req.session.crewMemberId ?? null,
   };
 
-  return res.status(200).json({ user: sessionUser });
+  const allPermissions = getPermissions();
+  const rolePermissions = allPermissions[req.session.role as string] ?? {};
+
+  return res.status(200).json({ user: sessionUser, permissions: rolePermissions });
 });
 
 // POST /api/auth/logout

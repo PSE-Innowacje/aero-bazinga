@@ -1,7 +1,8 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { PERMISSIONS, PermissionLevel, MenuSection } from "shared/permissions";
+import { PermissionLevel } from "shared/permissions";
+import type { MenuSection } from "shared/permissions";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,7 +15,7 @@ export function ProtectedRoute({
   section,
   minPermission = PermissionLevel.READ,
 }: ProtectedRouteProps) {
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, permissions, isLoading, isAuthenticated } = useAuth();
 
   if (isLoading) {
     return (
@@ -28,12 +29,11 @@ export function ProtectedRoute({
     return <Navigate to="/login" replace />;
   }
 
-  if (section && user) {
-    const level = PERMISSIONS[user.role][section];
-    if (level === PermissionLevel.NONE) {
+  if (section && user && permissions) {
+    const level = permissions[section];
+    if (!level || level === PermissionLevel.NONE) {
       return <Navigate to="/unauthorized" replace />;
     }
-    // Check minimum permission level if specified
     if (
       minPermission === PermissionLevel.CRUD &&
       level === PermissionLevel.READ

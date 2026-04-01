@@ -81,9 +81,12 @@ export function LoginPage() {
       >
         <CardContent className="p-0">
           {/* Product name */}
-          <h1 className="mb-xs text-display font-semibold text-primary">
-            AERO
-          </h1>
+          <div className="mb-xs flex items-center gap-sm">
+            <img src="/logo.svg" alt="AERO" className="h-10 w-10" />
+            <h1 className="text-display font-semibold text-primary">
+              AERO
+            </h1>
+          </div>
 
           {/* Subtitle */}
           <p className="mb-2xl text-body text-text-muted">

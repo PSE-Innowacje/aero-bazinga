@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import "dotenv/config";
 import { CREW_ROLES } from "shared/crew-roles";
 import { OPERATION_TYPES_PL } from "shared/operation-types";
+import { PERMISSIONS } from "shared/permissions";
 
 async function seed() {
   const client = await pool.connect();
@@ -27,7 +28,20 @@ async function seed() {
     }
     console.log("Operation types seeded.");
 
-    // 3. Seed admin user per D-04
+    // 3. Seed role_permissions from static defaults
+    for (const [role, sections] of Object.entries(PERMISSIONS)) {
+      for (const [section, level] of Object.entries(sections)) {
+        await client.query(
+          `INSERT INTO role_permissions (role, section, level)
+           VALUES ($1::user_role, $2, $3)
+           ON CONFLICT (role, section) DO NOTHING`,
+          [role, section, level]
+        );
+      }
+    }
+    console.log("Role permissions seeded.");
+
+    // 4. Seed admin user per D-04
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
     if (!adminEmail || !adminPassword) {

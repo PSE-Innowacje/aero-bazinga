@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Shield body -->
+  <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="#003E7E"/>
+  <!-- Shield inner highlight -->
+  <path d="M32 8L12 18v14c0 12.4 8.64 24 20 28 11.36-4 20-15.6 20-28V18L32 8z" fill="#002E5E"/>
+  <!-- Rotor hub -->
+  <circle cx="32" cy="28" r="4" fill="white"/>
+  <!-- Rotor blades -->
+  <rect x="14" y="26.5" width="16" height="3" rx="1.5" fill="white" opacity="0.9"/>
+  <rect x="34" y="26.5" width="16" height="3" rx="1.5" fill="white" opacity="0.9"/>
+  <rect x="30.5" y="12" width="3" height="14" rx="1.5" fill="white" opacity="0.7"/>
+  <rect x="30.5" y="32" width="3" height="10" rx="1.5" fill="white" opacity="0.7"/>
+  <!-- Helicopter body silhouette -->
+  <path d="M24 38h16l2 4H22l2-4z" fill="white" opacity="0.85"/>
+  <path d="M28 42h8v2h-8z" fill="white" opacity="0.6"/>
+  <!-- Tail -->
+  <path d="M22 40l-4 2v1h4v-3z" fill="white" opacity="0.5"/>
+  <!-- AERO text -->
+  <text x="32" y="54" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="7" font-weight="700" fill="white" letter-spacing="1.5">AERO</text>
+</svg>

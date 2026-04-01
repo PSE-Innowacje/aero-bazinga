@@ -12,10 +12,10 @@ AERO is built in four phases that follow the natural dependency chain of the app
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
-- [ ] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
-- [ ] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history
-- [ ] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade
+- [x] **Phase 1: Foundation** - Project scaffolding, database schema, and authentication
+- [x] **Phase 2: Admin Panel** - CRUD management for helicopters, crew members, airfields, and system users
+- [x] **Phase 3: Planned Operations** - Full operations module with KML upload, map display, status workflow, and history (completed 2026-03-31)
+- [x] **Phase 4: Flight Orders** - Full flight order module with validation, map display, and completion cascade (completed 2026-03-31)
 
 ## Phase Details
 
@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Scaffold monorepo (React + Vite + Tailwind + shadcn/ui, Express, shared types/enums/permissions)
 - [x] 01-02-PLAN.md — Complete database schema (all tables for Phases 1-4), connection pool, migration runner, seed script
-- [ ] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
+- [x] 01-03-PLAN.md — Authentication flow (login/logout/session endpoints, RBAC middleware, frontend shell with role-filtered sidebar)
 **UI hint**: yes
 
 ### Phase 2: Admin Panel
@@ -49,9 +49,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: Helicopters CRUD — API endpoints + React list and form (all fields, validation, default sort)
-- [ ] 02-02: Crew members CRUD — API endpoints + React list and form (email validation, pilot-conditional fields, default sort)
-- [ ] 02-03: Airfields + System users CRUD — API endpoints + React lists and forms for both simpler entities
+- [x] 02-01: Helicopters CRUD — API endpoints + React list and form (all fields, validation, default sort)
+- [x] 02-02: Crew members CRUD — API endpoints + React list and form (email validation, pilot-conditional fields, default sort)
+- [x] 02-03: Airfields + System users CRUD — API endpoints + React lists and forms for both simpler entities
 **UI hint**: yes
 
 ### Phase 3: Planned Operations
@@ -68,9 +68,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: Operations core — DB layer, KML upload and parsing, Haversine distance calculation, create/edit API with auto-number and role restrictions
-- [ ] 03-02: Operations workflow — status transitions (planner cancel, supervisor confirm/reject, OPS-09 auto-transitions), history log, comments API
-- [ ] 03-03: Operations UI — operation form with map display (Leaflet), list view with filtering/sorting, status action buttons per role
+- [x] 03-01: Operations core — DB layer, KML upload and parsing, Haversine distance calculation, create/edit API with auto-number and role restrictions
+- [x] 03-02: Operations workflow — status transitions (planner cancel, supervisor confirm/reject, OPS-09 auto-transitions), history log, comments API
+- [x] 03-03: Operations UI — operation form with map display (Leaflet), list view with filtering/sorting, status action buttons per role
 **UI hint**: yes
 
 ### Phase 4: Flight Orders
@@ -87,9 +87,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3->4 transition on link
-- [ ] 04-02: Flight orders workflow — submit (1->2), supervisor accept/reject (2->4 or 2->3), completion reporting (4->5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
-- [ ] 04-03: Flight orders UI — order form with map display (start + operation routes + end), list view with filtering/sorting, status action buttons per role
+- [x] 04-01: Flight orders core — DB layer, create/edit API with auto-fill, crew weight + route length calculation, all 5 validation rules, OPS status 3->4 transition on link
+- [x] 04-02: Flight orders workflow — submit (1->2), supervisor accept/reject (2->4 or 2->3), completion reporting (4->5/6/7) with cascade to linked operations, real datetime requirement for status 5/6
+- [x] 04-03: Flight orders UI — order form with map display (start + operation routes + end), list view with filtering/sorting, status action buttons per role
 **UI hint**: yes
 
 ## Progress
@@ -99,7 +99,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
-| 2. Admin Panel | 0/3 | Not started | - |
-| 3. Planned Operations | 0/3 | Not started | - |
-| 4. Flight Orders | 0/3 | Not started | - |
+| 1. Foundation | 3/3 | Complete | 2026-03-31 |
+| 2. Admin Panel | 3/3 | Complete | 2026-03-31 |
+| 3. Planned Operations | 3/3 | Complete   | 2026-03-31 |
+| 4. Flight Orders | 3/3 | Complete | 2026-03-31 |
