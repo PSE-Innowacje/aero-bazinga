@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/context/AuthContext";
+import { StatusBadge } from "@/components/ui/status-badge";
 import type { PlannedOperation } from "shared/types";
 import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
@@ -27,29 +28,6 @@ function formatDate(dateStr: string | null): string {
   return dateStr.substring(0, 10);
 }
 
-function StatusBadge({ status }: { status: number }) {
-  const label = OPERATION_STATUS_LABELS_PL[status as keyof typeof OPERATION_STATUS_LABELS_PL] ?? String(status);
-
-  const colorMap: Record<number, string> = {
-    1: "bg-blue-100 text-blue-800",
-    2: "bg-red-100 text-red-800",
-    3: "bg-green-100 text-green-800",
-    4: "bg-orange-100 text-orange-800",
-    5: "bg-yellow-100 text-yellow-800",
-    6: "bg-gray-100 text-gray-800",
-    7: "bg-slate-100 text-slate-800",
-  };
-
-  const colorClass = colorMap[status] ?? "bg-gray-100 text-gray-800";
-
-  return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${colorClass}`}
-    >
-      {label}
-    </span>
-  );
-}
 
 const STATUS_OPTIONS = [
   { value: "all", label: "Wszystkie" },
@@ -187,7 +165,7 @@ export function OperationsListPage() {
                   <TableCell>{formatDate(op.planned_earliest_date)}</TableCell>
                   <TableCell>{formatDate(op.planned_latest_date)}</TableCell>
                   <TableCell>
-                    <StatusBadge status={op.status} />
+                    <StatusBadge status={op.status} label={OPERATION_STATUS_LABELS_PL[op.status as keyof typeof OPERATION_STATUS_LABELS_PL] ?? String(op.status)} type="operation" />
                   </TableCell>
                 </TableRow>
               ))}

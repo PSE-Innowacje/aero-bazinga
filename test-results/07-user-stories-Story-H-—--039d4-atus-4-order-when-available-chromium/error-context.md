@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "AERO" [ref=e7]
+        - generic [ref=e8]: AERO
+      - navigation [ref=e9]:
+        - link "Pulpit" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - img [ref=e12]
+          - generic [ref=e17]: Pulpit
+        - generic [ref=e18]:
+          - generic [ref=e19]: PLANOWANIE OPERACJI
+          - link "Lista operacji" [ref=e20] [cursor=pointer]:
+            - /url: /operations
+            - img [ref=e21]
+            - generic [ref=e24]: Lista operacji
+        - generic [ref=e25]:
+          - generic [ref=e26]: ZLECENIA NA LOT
+          - link "Lista zleceń" [ref=e27] [cursor=pointer]:
+            - /url: /flight-orders
+            - img [ref=e28]
+            - generic [ref=e31]: Lista zleceń
+      - button "KP Kuba Pilot Pilot" [ref=e33] [cursor=pointer]:
+        - generic [ref=e34]: KP
+        - generic [ref=e35]:
+          - paragraph [ref=e36]: Kuba Pilot
+          - paragraph [ref=e37]: Pilot
+        - img [ref=e38]
+      - button "Zwiń menu" [ref=e43] [cursor=pointer]:
+        - img [ref=e44]
+  - main [ref=e46]:
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - heading "Zlecenia na lot" [level=1] [ref=e49]
+        - button "Nowe zlecenie" [ref=e50] [cursor=pointer]:
+          - img [ref=e51]
+          - text: Nowe zlecenie
+      - generic [ref=e52]:
+        - generic [ref=e53]: "Filtruj po statusie:"
+        - combobox [active] [ref=e54] [cursor=pointer]:
+          - generic: Zaakceptowane
+          - img [ref=e55]
+      - paragraph [ref=e57]: Brak zleceń dla wybranego filtra.
+```

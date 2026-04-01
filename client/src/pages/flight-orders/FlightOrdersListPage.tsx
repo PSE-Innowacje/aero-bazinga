@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 interface FlightOrderListItem {
   id: number;
@@ -37,30 +38,6 @@ function formatDateTime(dateStr: string | null | undefined): string {
   return new Date(dateStr).toLocaleString("pl-PL");
 }
 
-function StatusBadge({ status }: { status: number }) {
-  const label =
-    FLIGHT_ORDER_STATUS_LABELS_PL[
-      status as keyof typeof FLIGHT_ORDER_STATUS_LABELS_PL
-    ] ?? String(status);
-
-  const colorMap: Record<number, string> = {
-    1: "bg-blue-100 text-blue-800",
-    2: "bg-yellow-100 text-yellow-800",
-    3: "bg-red-100 text-red-800",
-    4: "bg-green-100 text-green-800",
-    5: "bg-orange-100 text-orange-800",
-    6: "bg-gray-100 text-gray-800",
-    7: "bg-slate-100 text-slate-800",
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${colorMap[status] ?? "bg-gray-100 text-gray-800"}`}
-    >
-      {label}
-    </span>
-  );
-}
 
 const STATUS_OPTIONS = [
   { value: "all", label: "Wszystkie" },
@@ -192,7 +169,7 @@ export function FlightOrdersListPage() {
                   </TableCell>
                   <TableCell>{fo.pilot_name}</TableCell>
                   <TableCell>
-                    <StatusBadge status={fo.status} />
+                    <StatusBadge status={fo.status} label={FLIGHT_ORDER_STATUS_LABELS_PL[fo.status as keyof typeof FLIGHT_ORDER_STATUS_LABELS_PL] ?? String(fo.status)} type="flight-order" />
                   </TableCell>
                 </TableRow>
               ))}

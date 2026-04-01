@@ -3,11 +3,23 @@ import { useNavigate } from "react-router-dom";
 import {
   ClipboardList,
   FileText,
-  Plane,
   AlertTriangle,
   Clock,
   Users,
 } from "lucide-react";
+
+function HelicopterIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M3 3h18" />
+      <path d="M12 3v7" />
+      <path d="M5 10h14l-2 5H7l-2-5z" />
+      <path d="M12 15v4" />
+      <path d="M8 19h8" />
+      <path d="M19 10l2 2" />
+    </svg>
+  );
+}
 import { useAuth } from "@/context/AuthContext";
 import { ROLE_DISPLAY_PL } from "shared/roles";
 import { UserRole } from "shared/roles";
@@ -288,7 +300,7 @@ export function DashboardPage() {
         <StatCard
           title="Aktywne helikoptery"
           value={stats.helicopters.active}
-          icon={Plane}
+          icon={HelicopterIcon}
           subtitle={`${stats.helicopters.total} łącznie`}
           accent="muted"
         />

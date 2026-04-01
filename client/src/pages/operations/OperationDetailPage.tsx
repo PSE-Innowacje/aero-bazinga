@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import type { PlannedOperation, OperationComment, OperationHistory, KmlPoint } from "shared/types";
 import { OPERATION_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
+import { StatusBadge } from "@/components/ui/status-badge";
 import "leaflet/dist/leaflet.css";
 
 function formatDate(dateStr: string | null | undefined): string {
@@ -16,24 +17,6 @@ function formatDate(dateStr: string | null | undefined): string {
 function formatDateTime(dateStr: string | null | undefined): string {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleString("pl-PL");
-}
-
-function StatusBadge({ status }: { status: number }) {
-  const label = OPERATION_STATUS_LABELS_PL[status as keyof typeof OPERATION_STATUS_LABELS_PL] ?? String(status);
-  const colorMap: Record<number, string> = {
-    1: "bg-blue-100 text-blue-800",
-    2: "bg-red-100 text-red-800",
-    3: "bg-green-100 text-green-800",
-    4: "bg-orange-100 text-orange-800",
-    5: "bg-yellow-100 text-yellow-800",
-    6: "bg-gray-100 text-gray-800",
-    7: "bg-slate-100 text-slate-800",
-  };
-  return (
-    <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ${colorMap[status] ?? "bg-gray-100 text-gray-800"}`}>
-      {label}
-    </span>
-  );
 }
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
@@ -271,7 +254,7 @@ export function OperationDetailPage() {
             <h1 className="text-heading font-semibold text-primary">
               {operation.operation_number}
             </h1>
-            <StatusBadge status={status} />
+            <StatusBadge status={status} label={OPERATION_STATUS_LABELS_PL[status as keyof typeof OPERATION_STATUS_LABELS_PL] ?? String(status)} type="operation" />
           </div>
           <p className="mt-xs text-sm text-text-muted">{operation.short_description}</p>
         </div>
@@ -300,7 +283,7 @@ export function OperationDetailPage() {
           {canConfirm && (
             <Button
               size="sm"
-              className="bg-green-700 text-white hover:bg-green-800"
+              className="bg-primary text-white hover:bg-primary-hover"
               disabled={statusActionLoading}
               onClick={() => {
                 if (!operation.planned_earliest_date || !operation.planned_latest_date) {

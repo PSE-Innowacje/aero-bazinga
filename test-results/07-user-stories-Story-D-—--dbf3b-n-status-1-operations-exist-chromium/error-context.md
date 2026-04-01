@@ -1,0 +1,134 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "AERO" [ref=e7]
+        - generic [ref=e8]: AERO
+      - navigation [ref=e9]:
+        - link "Pulpit" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - img [ref=e12]
+          - generic [ref=e17]: Pulpit
+        - generic [ref=e18]:
+          - generic [ref=e19]: ADMINISTRACJA
+          - link "Helikoptery" [ref=e20] [cursor=pointer]:
+            - /url: /admin/helicopters
+            - img [ref=e21]
+            - generic [ref=e24]: Helikoptery
+          - link "Członkowie załogi" [ref=e25] [cursor=pointer]:
+            - /url: /admin/crew
+            - img [ref=e26]
+            - generic [ref=e31]: Członkowie załogi
+          - link "Lądowiska planowe" [ref=e32] [cursor=pointer]:
+            - /url: /admin/airfields
+            - img [ref=e33]
+            - generic [ref=e36]: Lądowiska planowe
+          - link "Użytkownicy" [ref=e37] [cursor=pointer]:
+            - /url: /admin/users
+            - img [ref=e38]
+            - generic [ref=e50]: Użytkownicy
+        - generic [ref=e51]:
+          - generic [ref=e52]: PLANOWANIE OPERACJI
+          - link "Lista operacji" [ref=e53] [cursor=pointer]:
+            - /url: /operations
+            - img [ref=e54]
+            - generic [ref=e57]: Lista operacji
+        - generic [ref=e58]:
+          - generic [ref=e59]: ZLECENIA NA LOT
+          - link "Lista zleceń" [ref=e60] [cursor=pointer]:
+            - /url: /flight-orders
+            - img [ref=e61]
+            - generic [ref=e64]: Lista zleceń
+      - button "KN Kuba Nadzorca Osoba nadzorująca" [ref=e66] [cursor=pointer]:
+        - generic [ref=e67]: KN
+        - generic [ref=e68]:
+          - paragraph [ref=e69]: Kuba Nadzorca
+          - paragraph [ref=e70]: Osoba nadzorująca
+        - img [ref=e71]
+      - button "Zwiń menu" [ref=e76] [cursor=pointer]:
+        - img [ref=e77]
+  - main [ref=e79]:
+    - generic [ref=e80]:
+      - link "Planowane operacje" [ref=e81] [cursor=pointer]:
+        - /url: /operations
+        - img [ref=e82]
+        - text: Planowane operacje
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - heading "2026-0002" [level=1] [ref=e87]
+            - generic [ref=e88]: Wprowadzone
+          - paragraph [ref=e89]: Inspekcja linii 400kV Warszawa-Radom
+        - generic [ref=e90]:
+          - button "Edytuj" [ref=e91] [cursor=pointer]:
+            - img [ref=e92]
+            - text: Edytuj
+          - button "Odrzuć" [ref=e95] [cursor=pointer]
+          - button "Potwierdź" [ref=e96] [cursor=pointer]
+          - button "Anuluj operację" [ref=e97] [cursor=pointer]
+      - generic [ref=e98]:
+        - heading "Szczegóły operacji" [level=2] [ref=e99]
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - term [ref=e102]: Numer operacji
+            - definition [ref=e103]: 2026-0002
+          - generic [ref=e104]:
+            - term [ref=e105]: Numer projektu
+            - definition [ref=e106]: DE-26-10001
+          - generic [ref=e107]:
+            - term [ref=e108]: Typy operacji
+            - definition [ref=e109]: Oględziny wizualne, Zdjęcia
+          - generic [ref=e110]:
+            - term [ref=e111]: Utworzona przez
+            - definition [ref=e112]: jan.nowicki@pse.pl
+          - generic [ref=e113]:
+            - term [ref=e114]: Data najwcz. (prop.)
+            - definition [ref=e115]: 2026-04-30
+          - generic [ref=e116]:
+            - term [ref=e117]: Data najpóźn. (prop.)
+            - definition [ref=e118]: 2026-06-29
+          - generic [ref=e119]:
+            - term [ref=e120]: Data najwcz. (plan.)
+            - definition [ref=e121]: —
+          - generic [ref=e122]:
+            - term [ref=e123]: Data najpóźn. (plan.)
+            - definition [ref=e124]: —
+          - generic [ref=e125]:
+            - term [ref=e126]: Długość trasy
+            - definition [ref=e127]: 145.00 km
+          - generic [ref=e128]:
+            - term [ref=e129]: Punkty trasy
+            - definition [ref=e130]: 5 punktów
+          - generic [ref=e131]:
+            - term [ref=e132]: Utworzono
+            - definition [ref=e133]: 1.04.2026, 01:30:04
+          - generic [ref=e134]:
+            - term [ref=e135]: Zaktualizowano
+            - definition [ref=e136]: 1.04.2026, 01:30:04
+      - heading "Trasa operacji" [level=2] [ref=e138]
+      - generic [ref=e140]:
+        - heading "Komentarze" [level=2] [ref=e141]
+        - list [ref=e142]:
+          - listitem [ref=e143]:
+            - generic [ref=e144]:
+              - generic [ref=e145]: Robert Szymański
+              - generic [ref=e146]: 1.04.2026, 01:30:04
+            - paragraph [ref=e147]: Proszę o doprecyzowanie zakresu inspekcji — północna czy południowa część odcinka?
+          - listitem [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]: Jan Nowicki
+              - generic [ref=e151]: 1.04.2026, 01:30:04
+            - paragraph [ref=e152]: Cały odcinek — od stacji Warszawa Południe do stacji Radom Główna.
+        - generic [ref=e153]:
+          - text: Dodaj komentarz
+          - textbox "Dodaj komentarz" [ref=e154]:
+            - /placeholder: Wpisz komentarz...
+          - generic [ref=e156]: 0/500
+          - button "Dodaj komentarz" [disabled]
+      - button "Historia zmian (1)" [ref=e158] [cursor=pointer]:
+        - text: Historia zmian (1)
+        - img [ref=e159]
+```

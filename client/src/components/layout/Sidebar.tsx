@@ -56,7 +56,7 @@ interface NavSection {
 
 // Top-level items (always visible, no permission gating)
 const TOP_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", path: "/", icon: LayoutDashboard },
+  { label: "Pulpit", path: "/", icon: LayoutDashboard },
 ];
 
 const NAV_SECTIONS: NavSection[] = [

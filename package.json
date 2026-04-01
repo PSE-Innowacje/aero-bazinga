@@ -10,6 +10,7 @@
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "seed": "npm run seed -w server",
+    "seed:demo": "npx tsx server/src/db/demo-seed.ts",
     "test": "npx vitest run --exclude e2e",
     "test:watch": "vitest",
     "test:e2e": "npx playwright test",

@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import type { FlightOrder, KmlPoint } from "shared/types";
 import { FLIGHT_ORDER_STATUS_LABELS_PL } from "shared/statuses";
 import { UserRole } from "shared/roles";
+import { StatusBadge } from "@/components/ui/status-badge";
 import "leaflet/dist/leaflet.css";
 
 function formatDateTime(dateStr: string | null | undefined): string {
@@ -15,28 +16,6 @@ function formatDateTime(dateStr: string | null | undefined): string {
   return new Date(dateStr).toLocaleString("pl-PL");
 }
 
-function StatusBadge({ status }: { status: number }) {
-  const label =
-    FLIGHT_ORDER_STATUS_LABELS_PL[
-      status as keyof typeof FLIGHT_ORDER_STATUS_LABELS_PL
-    ] ?? String(status);
-  const colorMap: Record<number, string> = {
-    1: "bg-blue-100 text-blue-800",
-    2: "bg-yellow-100 text-yellow-800",
-    3: "bg-red-100 text-red-800",
-    4: "bg-green-100 text-green-800",
-    5: "bg-orange-100 text-orange-800",
-    6: "bg-gray-100 text-gray-800",
-    7: "bg-slate-100 text-slate-800",
-  };
-  return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ${colorMap[status] ?? "bg-gray-100 text-gray-800"}`}
-    >
-      {label}
-    </span>
-  );
-}
 
 function InfoRow({
   label,
@@ -361,7 +340,7 @@ export function FlightOrderDetailPage() {
             <h1 className="text-heading font-semibold text-primary">
               Zlecenie {order.order_number}
             </h1>
-            <StatusBadge status={status} />
+            <StatusBadge status={status} label={FLIGHT_ORDER_STATUS_LABELS_PL[status as keyof typeof FLIGHT_ORDER_STATUS_LABELS_PL] ?? String(status)} type="flight-order" />
           </div>
           <p className="mt-xs text-sm text-text-muted">
             {order.helicopter_registration} ({order.helicopter_type})
@@ -402,7 +381,7 @@ export function FlightOrderDetailPage() {
           {canAccept && (
             <Button
               size="sm"
-              className="bg-green-700 text-white hover:bg-green-800"
+              className="bg-primary text-white hover:bg-primary-hover"
               disabled={statusActionLoading}
               onClick={() => doStatusTransition(4)}
             >
@@ -413,7 +392,7 @@ export function FlightOrderDetailPage() {
             <>
               <Button
                 size="sm"
-                className="bg-orange-600 text-white hover:bg-orange-700"
+                className="bg-secondary text-white hover:bg-secondary/80"
                 disabled={statusActionLoading}
                 onClick={() => handleCompletion(5)}
               >
@@ -421,7 +400,7 @@ export function FlightOrderDetailPage() {
               </Button>
               <Button
                 size="sm"
-                className="bg-green-700 text-white hover:bg-green-800"
+                className="bg-primary text-white hover:bg-primary-hover"
                 disabled={statusActionLoading}
                 onClick={() => handleCompletion(6)}
               >
@@ -506,7 +485,7 @@ export function FlightOrderDetailPage() {
             label="Helikopter"
             value={`${order.helicopter_registration} - ${order.helicopter_type}`}
           />
-          <InfoRow label="Status" value={<StatusBadge status={status} />} />
+          <InfoRow label="Status" value={<StatusBadge status={status} label={FLIGHT_ORDER_STATUS_LABELS_PL[status as keyof typeof FLIGHT_ORDER_STATUS_LABELS_PL] ?? String(status)} type="flight-order" />} />
           <InfoRow
             label="Planowane rozpoczęcie"
             value={formatDateTime(order.planned_start_datetime)}
